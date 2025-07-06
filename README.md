@@ -3,6 +3,11 @@
 Este projeto é parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Computação e tem como objetivo auxiliar **recrutadores**, **avaliadores técnicos** e interessados em obter uma visão automatizada de perfis públicos no GitHub.
 
 ---
+## 🖼️ Demonstração
+
+![Demonstração do Projeto](assets/demo.gif)
+
+---
 
 ## ⚠️ Status do Projeto
 
