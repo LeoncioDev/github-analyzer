@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+PyGithub
+transformers
+torch
+python-multipart
+python-dotenv

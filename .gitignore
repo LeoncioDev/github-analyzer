@@ -1,0 +1,6 @@
+# Ignora o arquivo com o token
+backend/.env
+
+# Ignora arquivos Python compilados
+__pycache__/
+*.pyc

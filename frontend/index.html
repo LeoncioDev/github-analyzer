@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Analisador GitHub com IA</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <h1>🔍 Analisador de Perfil GitHub com IA</h1>
+
+  <form id="formulario" aria-label="Formulário para análise de perfil GitHub">
+    <input 
+      type="text" 
+      id="githubLink" 
+      placeholder="Cole o link do GitHub..." 
+      required 
+      aria-required="true" 
+      aria-describedby="resultado"
+      autocomplete="off"
+      autofocus
+    />
+    <button type="submit">Analisar</button>
+  </form>
+
+  <section id="resultado" role="region" aria-live="polite" aria-atomic="true" tabindex="0">
+    <!-- Resultado da análise aparecerá aqui -->
+  </section>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

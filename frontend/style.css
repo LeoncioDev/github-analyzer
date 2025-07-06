@@ -1,0 +1,219 @@
+/* Fundo com leve degradê suave */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Degradê suave para dar profundidade */
+  background: linear-gradient(135deg, #e0e7ff 0%, #f9fafb 100%);
+  padding: 2rem;
+  box-sizing: border-box;
+  color: #222;
+  /* Transição suave para cores ao passar o mouse, se precisar */
+  transition: background-color 0.3s ease;
+}
+
+/* Título com sombra leve e cor um pouco mais vibrante */
+h1 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #334eea;
+  text-shadow: 0 1px 3px rgba(51, 78, 234, 0.4);
+  font-weight: 700;
+  font-size: 2.25rem;
+}
+
+/* Form com sombra, bordas arredondadas e fundo branco */
+form {
+  width: 100%;
+  max-width: 600px;
+  min-width: 280px;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(51, 78, 234, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+form:hover,
+form:focus-within {
+  box-shadow: 0 12px 24px rgba(51, 78, 234, 0.15);
+}
+
+/* Input com sombra suave e bordas arredondadas */
+input[type="text"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f9fafb;
+}
+
+input[type="text"]:focus {
+  border-color: #334eea;
+  outline: none;
+  box-shadow: 0 0 8px rgba(51, 78, 234, 0.4);
+  background-color: white;
+}
+
+/* Botão com cor vibrante e sombra para dar profundidade */
+button {
+  padding: 0.6rem 1.4rem;
+  font-size: 1.1rem;
+  border: none;
+  background-color: #334eea;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(51, 78, 234, 0.3);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover,
+button:focus {
+  background-color: #253ecb;
+  box-shadow: 0 6px 14px rgba(37, 62, 203, 0.6);
+  outline: none;
+}
+
+button:focus {
+  outline: 3px solid #a0b9ff;
+  outline-offset: 2px;
+}
+
+/* Container de resultado com fundo branco, bordas arredondadas, sombra mais marcante */
+#resultado {
+  width: 100%;
+  max-width: 600px;
+  min-width: 280px;
+  margin-top: 1rem;
+  background: white;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(51, 78, 234, 0.12);
+  line-height: 1.6;
+  color: #2b2b2b;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  /* Para aparecer suavemente ao carregar */
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+/* Fade in para o resultado */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Espaçamento e estilos para texto e listas */
+#resultado p, #resultado ul {
+  margin-bottom: 1.25rem;
+}
+
+/* Listas com ícones personalizados e leve sombra para destacar */
+#resultado ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#resultado ul li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 0.8em;
+  font-weight: 600;
+  color: #3a3a3a;
+  background-color: #f0f4ff;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem 0.5rem 2.8rem;
+  box-shadow: inset 2px 0 0 #334eea;
+  transition: background-color 0.3s ease;
+}
+
+#resultado ul li::before {
+  content: "✔️";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+}
+
+/* Destaques em texto com cor vibrante */
+#resultado strong {
+  color: #334eea;
+}
+
+/* Links estilizados */
+#resultado a {
+  color: #334eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+#resultado a:hover,
+#resultado a:focus {
+  text-decoration: underline;
+  color: #1e2abf;
+}
+
+/* Títulos internos para seções com borda inferior */
+#resultado h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #334eea;
+  font-weight: 700;
+  border-bottom: 3px solid #334eea;
+  padding-bottom: 0.35rem;
+}
+
+/* Caixa com informações numéricas com espaçamento e ícones */
+#resultado .info-box {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #444;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#resultado .info-box span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+  background: #f0f4ff;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  box-shadow: inset 1.5px 1.5px 3px rgba(51, 78, 234, 0.12);
+}
+
+/* Ícones pequenos nas infos */
+#resultado .info-box span.seguidores::before {
+  content: "👥";
+  font-size: 1.2rem;
+}
+
+#resultado .info-box span.seguindo::before {
+  content: "➡️";
+  font-size: 1.2rem;
+}
+
+#resultado .info-box span.repositorios::before {
+  content: "📁";
+  font-size: 1.2rem;
+}
