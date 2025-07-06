@@ -2,7 +2,11 @@
 
 Este projeto é parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Computação e tem como objetivo auxiliar **recrutadores**, **avaliadores técnicos** e interessados em obter uma visão automatizada de perfis públicos no GitHub.
 
-A aplicação analisa informações públicas do perfil e gera uma **análise técnica em linguagem natural**, apontando linguagens predominantes, destaque de repositórios e sugestões personalizadas de melhoria.
+---
+
+## ⚠️ Status do Projeto
+
+Este projeto está **em desenvolvimento** e ainda não está completo. Funcionalidades podem mudar e erros podem ocorrer. Feedbacks e contribuições são bem-vindos!
 
 ---
 
@@ -70,7 +74,6 @@ github-analisador/
 ├── .gitignore # Arquivos ignorados (ex: .env, pycache)
 └── README.md # Este arquivo
 
-
 ---
 
 ## 🔐 Segurança
@@ -92,4 +95,3 @@ github-analisador/
 ## 👨‍💻 Autor
 
 Desenvolvido por **[João Paulo Leôncio]** como parte do TCC de Ciência da Computação.
-
