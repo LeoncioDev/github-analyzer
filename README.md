@@ -5,7 +5,7 @@ Este projeto é parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Co
 ---
 ## 🖼️ Demonstração
 
-![Demonstração do Projeto](assets/demo.gif)
+![Demonstração do Projeto](assets/demosite.gif)
 
 ---
 
