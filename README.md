@@ -33,7 +33,7 @@ Este projeto está **em desenvolvimento** e ainda não está completo. Funcional
 | Backend    | Python + FastAPI             |
 | Frontend   | HTML + CSS + JavaScript      |
 | API externa| GitHub API                   |
-| IA opcional| Sentence Transformers (NLU)  |
+| IA | Sentence Transformers (NLU)  |
 | Middleware | CORS, dotenv (variáveis)     |
 
 ---
