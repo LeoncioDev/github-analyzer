@@ -1,3 +1,7 @@
+/* ======================= */
+/* 🌞 Modo Claro - Padrão */
+/* ======================= */
+
 /* Fundo com leve degradê suave */
 body {
   font-family: Arial, sans-serif;
@@ -7,16 +11,14 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* Degradê suave para dar profundidade */
   background: linear-gradient(135deg, #e0e7ff 0%, #f9fafb 100%);
   padding: 2rem;
   box-sizing: border-box;
   color: #222;
-  /* Transição suave para cores ao passar o mouse, se precisar */
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Título com sombra leve e cor um pouco mais vibrante */
+/* Título com sombra leve e cor vibrante */
 h1 {
   margin-bottom: 1.5rem;
   text-align: center;
@@ -26,7 +28,7 @@ h1 {
   font-size: 2.25rem;
 }
 
-/* Form com sombra, bordas arredondadas e fundo branco */
+/* Formulário estilizado */
 form {
   width: 100%;
   max-width: 600px;
@@ -46,7 +48,7 @@ form:focus-within {
   box-shadow: 0 12px 24px rgba(51, 78, 234, 0.15);
 }
 
-/* Input com sombra suave e bordas arredondadas */
+/* Input texto */
 input[type="text"] {
   flex: 1;
   padding: 0.75rem 1rem;
@@ -55,6 +57,7 @@ input[type="text"] {
   border-radius: 8px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   background-color: #f9fafb;
+  color: #222;
 }
 
 input[type="text"]:focus {
@@ -62,9 +65,10 @@ input[type="text"]:focus {
   outline: none;
   box-shadow: 0 0 8px rgba(51, 78, 234, 0.4);
   background-color: white;
+  color: #222;
 }
 
-/* Botão com cor vibrante e sombra para dar profundidade */
+/* Botão */
 button {
   padding: 0.6rem 1.4rem;
   font-size: 1.1rem;
@@ -90,7 +94,7 @@ button:focus {
   outline-offset: 2px;
 }
 
-/* Container de resultado com fundo branco, bordas arredondadas, sombra mais marcante */
+/* Resultado */
 #resultado {
   width: 100%;
   max-width: 600px;
@@ -105,24 +109,16 @@ button:focus {
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: 0.025em;
-  /* Para aparecer suavemente ao carregar */
   opacity: 0;
   animation: fadeIn 0.5s forwards;
 }
 
-/* Fade in para o resultado */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-/* Espaçamento e estilos para texto e listas */
-#resultado p, #resultado ul {
+#resultado p,
+#resultado ul {
   margin-bottom: 1.25rem;
 }
 
-/* Listas com ícones personalizados e leve sombra para destacar */
+/* Listas customizadas */
 #resultado ul {
   list-style: none;
   padding-left: 0;
@@ -150,12 +146,12 @@ button:focus {
   font-size: 1.2rem;
 }
 
-/* Destaques em texto com cor vibrante */
+/* Destaques */
 #resultado strong {
   color: #334eea;
 }
 
-/* Links estilizados */
+/* Links */
 #resultado a {
   color: #334eea;
   text-decoration: none;
@@ -169,7 +165,7 @@ button:focus {
   color: #1e2abf;
 }
 
-/* Títulos internos para seções com borda inferior */
+/* Títulos internos */
 #resultado h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -180,7 +176,7 @@ button:focus {
   padding-bottom: 0.35rem;
 }
 
-/* Caixa com informações numéricas com espaçamento e ícones */
+/* Caixa info */
 #resultado .info-box {
   display: flex;
   gap: 2rem;
@@ -202,7 +198,7 @@ button:focus {
   box-shadow: inset 1.5px 1.5px 3px rgba(51, 78, 234, 0.12);
 }
 
-/* Ícones pequenos nas infos */
+/* Ícones pequenos */
 #resultado .info-box span.seguidores::before {
   content: "👥";
   font-size: 1.2rem;
@@ -217,3 +213,25 @@ button:focus {
   content: "📁";
   font-size: 1.2rem;
 }
+
+/* Botão alternância modo claro/escuro */
+#darkModeToggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #334eea;
+  border: 2px solid #334eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+}
+
+#darkModeToggle:hover {
+  background-color: #f0f0f0;
+}
+
