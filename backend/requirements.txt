@@ -6,3 +6,7 @@ transformers
 torch
 python-multipart
 python-dotenv
+<<<<<<< HEAD
+=======
+sentence-transformers
+>>>>>>> 26971e3 (organizaçao do codigo)
