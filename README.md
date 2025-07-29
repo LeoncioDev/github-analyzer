@@ -1,8 +1,10 @@
 # 🔍 GitHub Analisador com IA – Projeto de TCC
 
-Este projeto é parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Computação e tem como objetivo auxiliar **recrutadores**, **avaliadores técnicos** e interessados em obter uma visão automatizada de perfis públicos no GitHub.
+Projeto desenvolvido como Trabalho de Conclusão de Curso (TCC) em Ciência da Computação.  
+Objetivo: facilitar a análise automatizada de perfis públicos no GitHub para **recrutadores**, **avaliadores técnicos** e interessados em obter insights rápidos e precisos.
 
 ---
+
 ## 🖼️ Demonstração
 
 ![Demonstração do Projeto](assets/demosite.gif)
@@ -11,55 +13,52 @@ Este projeto é parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Co
 
 ## ⚠️ Status do Projeto
 
-Este projeto está **em desenvolvimento** e ainda não está completo. Funcionalidades podem mudar e erros podem ocorrer. Feedbacks e contribuições são bem-vindos!
+Em desenvolvimento ativo. Funcionalidades podem mudar e bugs podem aparecer.  
+Contribuições, sugestões e feedbacks são super bem-vindos!
 
 ---
 
-## ✅ Funcionalidades
+## ✅ Funcionalidades Principais
 
-- 📊 Análise automatizada de perfis do GitHub
-- 🔍 Extração de dados públicos: bio, seguidores, linguagens, repositórios
-- 💬 Geração de relatório em HTML com insights técnicos
-- 💡 Sugestões de evolução para o perfil GitHub
-- 🧠 Uso de IA (Sentence Transformers) para expandir possibilidades
-- 🌐 Interface web simples, responsiva e acessível
-
----
-
-## 🧱 Arquitetura do Projeto
-
-| Camada     | Tecnologia                   |
-|------------|------------------------------|
-| Backend    | Python + FastAPI             |
-| Frontend   | HTML + CSS + JavaScript      |
-| API externa| GitHub API                   |
-| IA | Sentence Transformers (NLU)  |
-| Middleware | CORS, dotenv (variáveis)     |
+- 📊 Extração automática de dados públicos do GitHub: bio, seguidores, repositórios, linguagens usadas, estrelas, etc.
+- 💬 Geração de relatório técnico em HTML, com avaliação clara e estruturada do perfil.
+- 💡 Sugestões inteligentes para aprimorar o perfil e os projetos.
+- 🧠 Uso da API OpenAI GPT para análise avançada e geração de textos personalizados.
+- 🌐 Interface web simples, responsiva e amigável.
 
 ---
 
-## 🌐 Como Funciona
+## 🧱 Arquitetura e Tecnologias
 
-1. O usuário acessa o site e insere o link de um perfil GitHub.
-2. O frontend envia a URL via `fetch` para a rota `/analisar`.
-3. O backend consulta a GitHub API e extrai:
-   - Repositórios públicos
-   - Linguagens utilizadas
-   - Bio, seguidores, estrelas e mais
-4. O sistema gera uma análise em linguagem natural estruturada em HTML.
-5. A resposta é exibida diretamente na página.
+| Camada       | Tecnologias Utilizadas                        |
+|--------------|-----------------------------------------------|
+| Backend      | Python + FastAPI + OpenAI GPT API             |
+| Frontend     | HTML, CSS, JavaScript                         |
+| API Externa  | GitHub API                                    |
+| IA           | OpenAI GPT (chat completions)                 |
+| Middleware   | CORS, python-dotenv                           |
+
+---
+
+## 🌐 Fluxo de Funcionamento
+
+1. Usuário insere o perfil GitHub no site.
+2. Frontend envia requisição para o backend.
+3. Backend consulta a API do GitHub e coleta dados públicos.
+4. Backend usa a API OpenAI GPT para gerar análise técnica personalizada em HTML.
+5. Resultado é exibido na página para avaliação imediata.
 
 ---
 
 ## 🧪 Tecnologias Utilizadas
 
-- **FastAPI** – Framework web moderno para APIs Python
-- **PyGithub** – Cliente GitHub para Python
-- **Sentence Transformers** – Análise semântica de texto (expansível)
-- **python-dotenv** – Variáveis de ambiente seguras
-- **HTML, CSS, JS** – Frontend leve e acessível
-- **GitHub API** – Consulta de dados públicos
-- **CORS Middleware** – Integração segura entre backend e frontend
+- **FastAPI:** API backend rápida e moderna.
+- **PyGithub:** Cliente para integração com GitHub API.
+- **OpenAI GPT API:** Geração de textos inteligentes e análise de perfil.
+- **python-dotenv:** Variáveis de ambiente seguras.
+- **HTML/CSS/JS:** Frontend leve e responsivo.
+- **GitHub API:** Consulta oficial e confiável de dados públicos.
+- **CORS:** Segurança na comunicação frontend-backend.
 
 ---
 
@@ -67,36 +66,38 @@ Este projeto está **em desenvolvimento** e ainda não está completo. Funcional
 
 github-analisador/
 ├── backend/
-│ ├── main.py # Lógica da API FastAPI
-│ ├── .env # Token GitHub (não enviado ao GitHub)
-│ └── requirements.txt # Dependências do backend
+│ ├── main.py # API FastAPI e lógica principal
+│ ├── requirements.txt # Dependências Python
+│ ├── .env # Variáveis sensíveis (não commitadas)
 │
 ├── frontend/
-│ ├── index.html # Interface principal
-│ ├── style.css # Estilos da página
-│ └── script.js # Lógica para envio e exibição
+│ ├── index.html # Interface web principal
+│ ├── style.css # Estilos da aplicação
+│ └── script.js # Scripts para interação e requisição
 │
-├── .gitignore # Arquivos ignorados (ex: .env, pycache)
-└── README.md # Este arquivo
+├── .gitignore # Arquivos ignorados pelo Git
+└── README.md # Documentação do projeto
 
 ---
 
 ## 🔐 Segurança
 
-- O token da GitHub API é opcional e configurado via `.env` (não incluído no repositório).
-- O projeto usa `CORS` para controle de acesso entre frontend e backend.
-- Pastas como `__pycache__` e arquivos sensíveis estão ignorados via `.gitignore`.
+- Token da OpenAI e GitHub configurados via `.env`, nunca versionados.
+- Informações sensíveis protegidas por `.gitignore`.
+- CORS configurado para comunicação segura entre frontend e backend.
 
 ---
 
 ## 📌 Observações
 
-- O projeto roda localmente, sem necessidade de deploy externo.
-- Ideal para demonstração acadêmica, simulações de entrevistas ou uso pessoal por desenvolvedores.
-- IA está pronta para expansão futura com modelos mais avançados ou integração com bancos vetoriais.
+- Ideal para uso local e demonstrações acadêmicas.
+- Preparado para futuras melhorias com IA e banco vetorial.
+- Não requer deploy para funcionar.
 
 ---
 
 ## 👨‍💻 Autor
 
-Desenvolvido por **[João Paulo Leôncio]** como parte do TCC de Ciência da Computação.
+**João Paulo Leôncio** — Desenvolvedor e estudante de Ciência da Computação.  
+[GitHub](https://github.com/LeoncioDev) | [LinkedIn](https://www.linkedin.com/in/jo%C3%A3o-paulo-le%C3%B4ncio-78071627b/)
+
