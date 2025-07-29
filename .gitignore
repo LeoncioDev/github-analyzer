@@ -1,0 +1,24 @@
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pastas __pycache__ em backend
+backend/**/__pycache__/
+
+# Ambiente virtual (se usar)
+venv/
+env/
+.env
+
+# VSCode settings
+.vscode/
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
