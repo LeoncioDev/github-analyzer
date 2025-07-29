@@ -10,8 +10,6 @@ from dotenv import load_dotenv
 # Carregar variáveis do .env o mais cedo possível
 load_dotenv()
 
-print("OPENAI_API_KEY carregada no ambiente:", os.getenv("OPENAI_API_KEY"))
-
 from app.api.routes import router as api_router
 
 logging.basicConfig(level=logging.INFO)
