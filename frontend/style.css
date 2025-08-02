@@ -1,5 +1,5 @@
 /* ============================= */
-/* 🌞 VISUAL PRINCIPAL - MODO CLARO */
+/* 🌑 VISUAL PRINCIPAL - MODO ESCURO TIPO GITHUB */
 /* ============================= */
 
 /* RESET & BASE */
@@ -11,23 +11,23 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #e0e7ff, #f9fafb);
+  background-color: #0d1117;
+  color: #c9d1d9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  color: #222;
 }
 
 /* TÍTULO */
 h1 {
   font-size: 2.5rem;
-  color: #334eea;
+  color: #58a6ff;
   margin-bottom: 2rem;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(51, 78, 234, 0.15);
+  text-shadow: 0 1px 3px rgba(88, 166, 255, 0.15);
 }
 
 /* FORMULÁRIO */
@@ -35,10 +35,10 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: #fff;
+  background: #161b22;
   padding: 1.5rem 2rem;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(51, 78, 234, 0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   width: 100%;
   max-width: 640px;
 }
@@ -53,41 +53,42 @@ form {
 .input-container label {
   font-size: 1rem;
   font-weight: 600;
-  color: #334eea;
+  color: #79c0ff;
 }
 
 .input-container input {
   padding: 1.2rem 1.25rem;
   font-size: 1.25rem;
-  border: 1.5px solid #cbd5e1;
+  border: 1.5px solid #30363d;
   border-radius: 8px;
+  background-color: #0d1117;
+  color: #c9d1d9;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: #f9fafb;
 }
 
 .input-container input:focus {
-  border-color: #334eea;
+  border-color: #58a6ff;
   outline: none;
-  box-shadow: 0 0 8px rgba(51, 78, 234, 0.4);
+  box-shadow: 0 0 8px rgba(88, 166, 255, 0.4);
 }
 
 /* BOTÃO GRANDE */
 button {
   padding: 1rem 2rem;
   font-size: 1.15rem;
-  background: #334eea;
+  background: #238636;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  box-shadow: 0 5px 14px rgba(51, 78, 234, 0.3);
+  box-shadow: 0 5px 14px rgba(35, 134, 54, 0.3);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 button:hover {
-  background: #253ecb;
-  box-shadow: 0 7px 18px rgba(37, 62, 203, 0.5);
+  background: #2ea043;
+  box-shadow: 0 7px 18px rgba(46, 160, 67, 0.5);
 }
 
 /* RESULTADO BONITO */
@@ -95,15 +96,15 @@ button:hover {
   width: 100%;
   max-width: 640px;
   margin-top: 2rem;
-  background: #fff;
+  background: #161b22;
   padding: 2rem 2.5rem;
   border-radius: 14px;
-  box-shadow: 0 12px 28px rgba(51, 78, 234, 0.15);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
   opacity: 0;
   animation: fadeIn 0.4s forwards;
   font-size: 1rem;
   line-height: 1.6;
-  color: #222;
+  color: #c9d1d9;
 }
 
 /* ANIMAÇÃO */
@@ -120,8 +121,8 @@ button:hover {
 
 .relatorio h2 {
   font-size: 1.7rem;
-  color: #334eea;
-  border-bottom: 2px solid #334eea;
+  color: #58a6ff;
+  border-bottom: 2px solid #30363d;
   padding-bottom: 6px;
   margin-bottom: 1rem;
   font-weight: 700;
@@ -130,7 +131,7 @@ button:hover {
 .relatorio p {
   margin-bottom: 1rem;
   font-size: 1.1rem;
-  color: #333;
+  color: #adbac7;
 }
 
 /* CAIXA DE INFORMAÇÕES */
@@ -146,13 +147,13 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #f0f4ff;
+  background: #21262d;
   padding: 0.6rem 1rem;
   border-radius: 10px;
   font-weight: 700;
   font-size: 1rem;
-  box-shadow: inset 1.5px 1.5px 3px rgba(51, 78, 234, 0.12);
-  color: #334eea;
+  box-shadow: inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.05);
+  color: #79c0ff;
 }
 
 /* ÍCONES DAS ESTATÍSTICAS */
@@ -168,15 +169,15 @@ button:hover {
 }
 
 .relatorio ul li {
-  background: #f0f4ff;
+  background: #21262d;
   padding: 0.75rem 1rem 0.75rem 2.8rem;
   border-radius: 8px;
   position: relative;
   margin-bottom: 0.75rem;
-  box-shadow: inset 3px 0 0 #334eea;
+  box-shadow: inset 3px 0 0 #58a6ff;
   font-weight: 600;
   font-size: 1.1rem;
-  color: #222;
+  color: #c9d1d9;
 }
 
 .relatorio ul li::before {
@@ -189,7 +190,7 @@ button:hover {
 
 /* LINKS DENTRO DO RELATÓRIO */
 .relatorio a {
-  color: #334eea;
+  color: #58a6ff;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
@@ -197,7 +198,7 @@ button:hover {
 
 .relatorio a:hover {
   text-decoration: underline;
-  color: #253ecb;
+  color: #79c0ff;
 }
 
 /* SUBTÍTULOS DENTRO DO TEXTO ANALÍTICO */
@@ -205,19 +206,194 @@ button:hover {
   margin-top: 1.2rem;
   margin-bottom: 0.5rem;
   font-size: 1.3rem;
-  color: #4455dd;
+  color: #79c0ff;
   font-weight: 700;
-  border-left: 4px solid #334eea;
+  border-left: 4px solid #58a6ff;
   padding-left: 0.8rem;
 }
 
 /* TEXTO EMITIDO (ex: nota de rodapé) */
 .relatorio p em {
   font-size: 0.9rem;
-  color: #555;
+  color: #8b949e;
 }
 
 /* MARGEM EMBAIXO DOS PARÁGRAFOS DO RELATÓRIO */
 .relatorio p {
   margin-bottom: 1rem;
+}
+
+
+/* ============================= */
+/* 🌞 VISUAL PRINCIPAL - MODO CLARO TIPO GITHUB */
+/* ============================= */
+
+body.modo-claro {
+  background-color: #f6f8fa;
+  color: #24292f;
+}
+
+body.modo-claro h1 {
+  color: #0969da;
+  text-shadow: 0 1px 3px rgba(9, 105, 218, 0.15);
+}
+
+body.modo-claro form {
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(149, 157, 165, 0.2);
+}
+
+body.modo-claro .input-container label {
+  color: #0969da;
+}
+
+body.modo-claro .input-container input {
+  background-color: #ffffff;
+  color: #24292f;
+  border: 1.5px solid #d0d7de;
+}
+
+body.modo-claro .input-container input:focus {
+  border-color: #0969da;
+  box-shadow: 0 0 8px rgba(9, 105, 218, 0.4);
+}
+
+body.modo-claro button {
+  background: #238636;
+  color: white;
+  box-shadow: 0 5px 14px rgba(35, 134, 54, 0.3);
+}
+
+body.modo-claro button:hover {
+  background: #2ea043;
+  box-shadow: 0 7px 18px rgba(46, 160, 67, 0.5);
+}
+
+body.modo-claro #resultado {
+  background: #ffffff;
+  color: #24292f;
+  box-shadow: 0 12px 28px rgba(149, 157, 165, 0.2);
+}
+
+body.modo-claro .relatorio h2 {
+  color: #0969da;
+  border-bottom: 2px solid #d0d7de;
+}
+
+body.modo-claro .relatorio p {
+  color: #57606a;
+}
+
+body.modo-claro .info-box {
+  background: transparent;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+body.modo-claro .info-box span {
+  background: #f0f3f6;
+  color: #0969da;
+  box-shadow: inset 1.5px 1.5px 3px rgba(9, 105, 218, 0.12);
+}
+
+body.modo-claro .relatorio ul li {
+  background: #f0f3f6;
+  color: #24292f;
+  box-shadow: inset 3px 0 0 #0969da;
+}
+
+body.modo-claro .relatorio a {
+  color: #0969da;
+}
+
+body.modo-claro .relatorio a:hover {
+  color: #58a6ff;
+}
+
+body.modo-claro .relatorio h3 {
+  color: #58a6ff;
+  border-left: 4px solid #0969da;
+}
+
+body.modo-claro .relatorio p em {
+  color: #6e7781;
+}
+
+/* BOTÃO DE TROCA DE TEMA (LUA / SOL) */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.2);
+}
+
+/* ============================= */
+/* 🌟 ANIMAÇÃO DE LOADING - TEXTO E PONTINHOS PULANDO INDIVIDUALMENTE */
+/* ============================= */
+
+.loading-container {
+  display: inline-flex;
+  font-weight: 700;
+  color: #58a6ff;
+  align-items: center;
+}
+
+.loading-text {
+  display: inline-block;
+  animation: textJump 1.5s infinite ease-in-out;
+}
+
+.loading-dots {
+  display: inline-flex;
+  margin-left: 0.3rem;
+}
+
+.loading-dot {
+  display: inline-block;
+  font-weight: 700;
+  color: #58a6ff;
+  font-size: 1.2em;
+  animation: dotJump 1.5s infinite ease-in-out;
+}
+
+.loading-dot:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.loading-dot:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.loading-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes textJump {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes dotJump {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
 }
