@@ -4,23 +4,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // =============================
   const formulario = document.getElementById("formulario");
   const resultadoDiv = document.getElementById("resultado");
-  const githubLinkInput = document.getElementById("githubLink");
+  const githubUsernameInput = document.getElementById("githubUsername"); // <-- Alterado de githubLink para githubUsername
   const themeToggle = document.getElementById("themeToggle");
   const body = document.body;
 
   // =============================
   // INICIALIZAÇÃO DO TEMA
   // =============================
-  // Forçar modo claro como padrão ao carregar a página
   body.classList.add("modo-claro");
   if (themeToggle) {
-    themeToggle.textContent = "☀️"; // emoji do sol no botão
+    themeToggle.textContent = "☀️"; // Define o emoji do botão de tema
   }
 
   // =============================
   // VALIDAÇÃO DE ELEMENTOS
   // =============================
-  if (!formulario || !resultadoDiv || !githubLinkInput) {
+  if (!formulario || !resultadoDiv || !githubUsernameInput) {
     console.warn("⚠️ Elementos do DOM não encontrados.");
     return;
   }
@@ -32,20 +31,22 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const botao = formulario.querySelector("button[type=submit]");
-    const githubLink = githubLinkInput.value.trim();
+    const username = githubUsernameInput.value.trim(); // <-- Pegando o valor do nome de usuário
 
-    // Validação do campo de URL
-    if (!githubLink) {
-      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❗ Por favor, insira uma URL do GitHub.</p>`;
+    // =============================
+    // VALIDAÇÃO DO NOME DE USUÁRIO
+    // =============================
+    if (!username) {
+      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❗ Por favor, insira o nome de usuário do GitHub.</p>`;
       resultadoDiv.focus();
       return;
     }
 
-    // Desabilitar botão e mostrar animação de loading
+    // Desabilita o botão para evitar múltiplos envios
     botao.disabled = true;
 
     // =============================
-    // 🔄 ANIMAÇÃO DE LOADING - TEXTO E PONTINHOS PULANDO INDIVIDUALMENTE
+    // 🔄 ANIMAÇÃO DE LOADING
     // =============================
     resultadoDiv.innerHTML = `
       <p class="carregando" tabindex="0">
@@ -62,14 +63,20 @@ document.addEventListener("DOMContentLoaded", () => {
     resultadoDiv.focus();
 
     try {
-      // Requisição para backend
+      // =============================
+      // ENVIO DA REQUISIÇÃO PARA O BACKEND
+      // =============================
       const resposta = await fetch("/analisar", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ github_url: githubLink }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: username }), // <-- Alterado para enviar 'username'
       });
 
-      // Tratamento de erro HTTP
+      // =============================
+      // TRATAMENTO DE ERRO HTTP
+      // =============================
       if (!resposta.ok) {
         const dadosErro = await resposta.json().catch(() => ({}));
         resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}</p>`;
@@ -77,7 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Processar resposta JSON
+      // =============================
+      // PROCESSAMENTO DA RESPOSTA
+      // =============================
       const dados = await resposta.json();
       console.log("Resposta recebida:", dados);
 
@@ -91,24 +100,24 @@ document.addEventListener("DOMContentLoaded", () => {
       resultadoDiv.focus();
 
     } catch (error) {
-      // Tratamento de erro de conexão
+      // =============================
+      // TRATAMENTO DE ERROS DE CONEXÃO
+      // =============================
       console.error("Erro na requisição:", error);
       resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ao conectar: ${error.message}</p>`;
       resultadoDiv.focus();
     } finally {
-      // Reabilitar botão após resposta ou erro
+      // Reabilita o botão após a requisição
       botao.disabled = false;
     }
   });
 
   // =============================
-  // ALTERNÂNCIA DE TEMA (CLARO/ESCURO)
+  // TOGGLE DE TEMA (CLARO/ESCURO)
   // =============================
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
       const modoClaroAtivo = body.classList.toggle("modo-claro");
-
-      // Alterna o emoji 🌙 <-> ☀️ no botão
       themeToggle.textContent = modoClaroAtivo ? "☀️" : "🌙";
     });
   }
