@@ -6,17 +6,18 @@ import logging
 
 router = APIRouter()
 
-class GithubInput(BaseModel):
-    github_url: str
+# Novo modelo de entrada: agora usamos apenas o nome de usuário
+class UsernameInput(BaseModel):
+    username: str
 
 @router.post("/analisar")
-async def analisar(input: GithubInput):
+async def analisar(input: UsernameInput):
     try:
-        if "github.com" not in input.github_url:
-            raise HTTPException(status_code=400, detail="URL inválida, use um link do GitHub.")
+        username = input.username.strip()
+        if not username:
+            raise HTTPException(status_code=400, detail="Nome de usuário inválido.")
 
-        username = input.github_url.rstrip("/").split("/")[-1]
-        logging.info(f"Analisando perfil GitHub: {username}")
+        logging.info(f"🔍 Analisando perfil GitHub: {username}")
 
         dados = buscar_dados_github(username)
         analise = gerar_analise_gpt(**dados)
@@ -26,5 +27,5 @@ async def analisar(input: GithubInput):
     except HTTPException as he:
         raise he
     except Exception as e:
-        logging.error(f"Erro na análise: {e}")
+        logging.error(f"❌ Erro na análise: {e}")
         return {"erro": f"Erro ao analisar perfil: {str(e)}"}
