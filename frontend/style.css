@@ -396,4 +396,178 @@ body.modo-claro .relatorio p em {
     transform: translateY(-8px);
     opacity: 1;
   }
+  
+}
+/* Botão de Filtros Avançados */
+#toggleFilters {
+  display: block;
+  width: 100%;
+  max-width: 600px;  /* Limita a largura máxima, ajuste conforme seu layout */
+  margin: 1rem auto 0 auto;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  text-align: center;
+  user-select: none;
+}
+
+#toggleFilters:hover,
+#toggleFilters:focus {
+  background-color: #0078d4;
+  border-color: #005fa3;
+  color: white;
+  outline: none;
+}
+
+/* Para modo escuro (caso queira adicionar depois) */
+body:not(.modo-claro) #toggleFilters {
+  background-color: #333;
+  border-color: #555;
+  color: #eee;
+}
+
+body:not(.modo-claro) #toggleFilters:hover,
+body:not(.modo-claro) #toggleFilters:focus {
+  background-color: #005fa3;
+  border-color: #003d6b;
+  color: #fff;
+}
+
+
+/* ====== Estilos para os filtros dentro do botão ====== */
+
+/* Container dos filtros avançados */
+#filtrosAvancados {
+  max-width: 600px;
+  margin: 1rem auto 2rem auto;
+  padding: 1.5rem 2rem;
+  background-color: #f9f9f9;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Grupos de filtros */
+#filtrosAvancados fieldset {
+  border: none;
+  margin-bottom: 1.5rem;
+  padding: 0;
+}
+
+/* Legendas dos grupos */
+#filtrosAvancados legend {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+  color: #0078d4;
+  border-bottom: 2px solid #0078d4;
+  padding-bottom: 0.3rem;
+  user-select: none;
+}
+
+/* Lista dos checkboxes - organizados em grid */
+#filtrosAvancados .checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem 1.2rem;
+}
+
+/* Cada label com checkbox */
+#filtrosAvancados label {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+/* Checkbox estilizado */
+#filtrosAvancados input[type="checkbox"] {
+  margin-right: 0.5rem;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #0078d4; /* cor do check */
+  transition: accent-color 0.3s ease;
+}
+
+/* Hover e foco no label */
+#filtrosAvancados label:hover,
+#filtrosAvancados label:focus-within {
+  color: #005fa3;
+}
+
+/* Botão submit dos filtros */
+#formFiltros button[type="submit"] {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 1.5rem auto 0 auto;
+  padding: 0.7rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  background-color: #0078d4;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#formFiltros button[type="submit"]:hover,
+#formFiltros button[type="submit"]:focus {
+  background-color: #005fa3;
+  outline: none;
+}
+
+/* Mensagens de erro e carregamento */
+#resultado p.erro {
+  color: #d93025;
+  font-weight: 700;
+  background-color: #fce8e6;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  max-width: 600px;
+  margin: 1rem auto;
+  box-shadow: 0 0 5px rgba(217, 48, 37, 0.4);
+}
+
+#resultado p.carregando {
+  color: #0078d4;
+  font-weight: 600;
+  max-width: 600px;
+  margin: 1rem auto;
+  text-align: center;
+}
+
+/* Modo escuro (opcional) */
+body:not(.modo-claro) #filtrosAvancados {
+  background-color: #222;
+  border-color: #444;
+  color: #eee;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+body:not(.modo-claro) #filtrosAvancados label:hover,
+body:not(.modo-claro) #filtrosAvancados label:focus-within {
+  color: #80b8ff;
+}
+
+body:not(.modo-claro) #formFiltros button[type="submit"] {
+  background-color: #005fa3;
+  color: #eee;
+}
+
+body:not(.modo-claro) #formFiltros button[type="submit"]:hover,
+body:not(.modo-claro) #formFiltros button[type="submit"]:focus {
+  background-color: #003d6b;
 }
