@@ -2,31 +2,95 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Analisador de Perfil GitHub</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <!-- Botão de alternância de tema -->
-  <div class="theme-toggle" id="themeToggle" title="Alternar tema">
-    🌙
-  </div>
+  <div class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</div>
 
   <main>
     <h1>Analisador de Perfil GitHub</h1>
 
+    <!-- Formulário simples de busca por usuário -->
     <form id="formulario">
       <input
         type="text"
         id="githubUsername"
         placeholder="Digite o nome de usuário do GitHub (ex: LeoncioDev)"
-        required
         autocomplete="off"
       />
       <button type="submit">Analisar</button>
     </form>
 
-    <section id="resultado" tabindex="-1"></section>
+    <!-- Botão para mostrar/ocultar filtros avançados -->
+    <button id="toggleFilters" type="button" style="margin-top:1rem;">Filtros Avançados 🔍</button>
+
+    <!-- Formulário de filtros avançados, inicialmente oculto -->
+    <section id="filtrosAvancados" style="display: none; margin-top: 1rem;">
+      <form id="formFiltros">
+
+        <!-- Linguagens de Programação -->
+        <fieldset>
+          <legend>Linguagens de Programação</legend>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
+            <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
+            <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
+            <label><input type="checkbox" name="linguagens" value="C++" /> C++</label>
+            <label><input type="checkbox" name="linguagens" value="Ruby" /> Ruby</label>
+            <label><input type="checkbox" name="linguagens" value="TypeScript" /> TypeScript</label>
+            <label><input type="checkbox" name="linguagens" value="Go" /> Go</label>
+            <label><input type="checkbox" name="linguagens" value="PHP" /> PHP</label>
+            <label><input type="checkbox" name="linguagens" value="C#" /> C#</label>
+            <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
+          </div>
+        </fieldset>
+
+        <!-- Habilidades Técnicas -->
+        <fieldset>
+          <legend>Habilidades Técnicas</legend>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
+            <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
+            <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
+            <label><input type="checkbox" name="habilidades" value="CI/CD" /> CI/CD</label>
+            <label><input type="checkbox" name="habilidades" value="AWS" /> AWS</label>
+            <label><input type="checkbox" name="habilidades" value="Azure" /> Azure</label>
+            <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
+          </div>
+        </fieldset>
+
+        <!-- Competências -->
+        <fieldset>
+          <legend>Competências</legend>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <label><input type="checkbox" name="competencias" value="Trabalho em equipe" /> Trabalho em equipe</label>
+            <label><input type="checkbox" name="competencias" value="Comunicação" /> Comunicação</label>
+            <label><input type="checkbox" name="competencias" value="Resolução de problemas" /> Resolução de problemas</label>
+            <label><input type="checkbox" name="competencias" value="Liderança" /> Liderança</label>
+            <label><input type="checkbox" name="competencias" value="Organização" /> Organização</label>
+          </div>
+        </fieldset>
+
+        <!-- Metodologias -->
+        <fieldset>
+          <legend>Metodologias</legend>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
+            <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
+            <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
+            <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
+            <label><input type="checkbox" name="metodologias" value="XP" /> XP (Extreme Programming)</label>
+          </div>
+        </fieldset>
+
+        <button type="submit" style="margin-top: 1rem;">Buscar Desenvolvedores</button>
+      </form>
+    </section>
+
+    <section id="resultado" tabindex="-1" style="margin-top: 2rem;"></section>
   </main>
 
   <!-- Biblioteca para converter Markdown em HTML -->
