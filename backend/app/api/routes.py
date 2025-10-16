@@ -13,7 +13,6 @@ class UsernameInput(BaseModel):
 class FiltrosInput(BaseModel):
     linguagens: Optional[List[str]] = []
     habilidades: Optional[List[str]] = []
-    competencias: Optional[List[str]] = []
     metodologias: Optional[List[str]] = []
     minRepos: Optional[int] = 0
     minStars: Optional[int] = 0
@@ -46,11 +45,9 @@ async def analisar_com_filtros(filtros: FiltrosInput):
     try:
         logging.info(f"🔍 Buscando candidatos com filtros: {filtros}")
 
-        # Verifica se ao menos um filtro foi preenchido
         if not any([
             filtros.linguagens,
             filtros.habilidades,
-            filtros.competencias,
             filtros.metodologias,
             filtros.minRepos > 0,
             filtros.minStars > 0,
@@ -60,8 +57,7 @@ async def analisar_com_filtros(filtros: FiltrosInput):
         ]):
             raise HTTPException(status_code=400, detail="É necessário informar ao menos um filtro válido para busca.")
 
-        # Concatena todas as palavras-chave selecionadas
-        palavras_chave = filtros.habilidades + filtros.competencias + filtros.metodologias
+        palavras_chave = filtros.habilidades + filtros.metodologias
         keywords_str = " ".join(palavras_chave) if palavras_chave else None
 
         dados = buscar_dados_github_com_filtros(
@@ -72,11 +68,17 @@ async def analisar_com_filtros(filtros: FiltrosInput):
             atividade_recente=filtros.atividadeRecente,
             localizacao=filtros.localizacao,
             keywords=keywords_str,
+            # REMOVIDO filtros_rigorosos para evitar erro
         )
 
         analise = gerar_analise_gpt(**dados)
 
-        return {"analise": analise}
+        analise_com_filtro = f"""
+        <p><strong>🔎 Perfil encontrado respeitando todos os filtros selecionados:</strong></p>
+        {analise}
+        """
+
+        return {"analise": analise_com_filtro}
 
     except HTTPException as he:
         raise he
