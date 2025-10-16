@@ -4,15 +4,26 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def gerar_analise_gpt(nome, bio, seguidores, seguindo, public_repos, linguagens, repos_detalhes, readme_text=""):
-    principais = ", ".join(sorted(linguagens, key=linguagens.get, reverse=True)[:3])
-    destacados = ", ".join(repos_detalhes[:3]) if repos_detalhes else "Nenhum repositório destacado."
+    try:
+        # Garantir que linguagens seja um dict para ordenação, caso contrário usar lista simples
+        if isinstance(linguagens, dict):
+            principais = ", ".join(sorted(linguagens, key=linguagens.get, reverse=True)[:3])
+        elif isinstance(linguagens, list):
+            principais = ", ".join(linguagens[:3])
+        else:
+            principais = "N/A"
 
-    prompt = f"""
+        destacados = ", ".join(repos_detalhes[:3]) if repos_detalhes else "Nenhum repositório destacado."
+
+        # Limitar tamanho do README para evitar erros de tamanho de prompt
+        readme_limitado = readme_text[:2000] if readme_text else ""
+
+        prompt = f"""
 Você é um analista técnico sênior especializado em avaliação detalhada de perfis GitHub para recrutadores e avaliadores técnicos exigentes.
 
 O conteúdo do README do perfil do desenvolvedor <strong>{nome}</strong> é o seguinte:
 \"\"\"
-{readme_text}
+{readme_limitado}
 \"\"\"
 
 Com base nisso e nos dados do perfil, gere um relatório técnico profissional em HTML limpo, sem usar blocos de código (```), nem marcação Markdown. Use somente tags HTML como <h2>, <h3>, <p>, <ul>, <li>, <strong>, <span style="color:green;">, <span style="color:red;"> e <span style="color:blue;">.
@@ -67,11 +78,16 @@ Tecnologias principais: {principais}
 Repositórios destacados: {destacados}
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=1400,
-        temperature=0.6,
-    )
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=1400,
+            temperature=0.6,
+        )
 
-    return response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip()
+
+    except Exception as e:
+        # Log de erro pode ser adaptado conforme seu sistema de logs
+        print(f"Erro ao gerar análise GPT: {e}")
+        return f"<p class='erro'>Erro ao gerar análise: {e}</p>"
