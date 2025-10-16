@@ -1,8 +1,8 @@
 import os
 import logging
+import random
 from github import Github
 from fastapi import HTTPException
-from datetime import datetime, timedelta
 from typing import Optional, List
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -58,24 +58,33 @@ def buscar_dados_github(username: str):
         logging.error(f"Erro ao buscar dados do GitHub: {e}")
         raise HTTPException(status_code=400, detail=f"Erro ao acessar GitHub: {str(e)}")
 
-def processar_usuario_com_filtros(user, min_stars: int):
+def processar_usuario_com_filtros(user, min_stars: int, linguagens_filtro: Optional[List[str]] = None):
     """
     Processa dados do usuário com filtros, limitando repositórios e somando stars.
-    Retorna dict com dados ou None se não passar filtro de stars.
+    Verifica se o usuário possui repositórios nas linguagens solicitadas.
+    Retorna dict com dados ou None se não passar filtro.
     """
     try:
         total_stars = 0
         linguagens_usuario = {}
         repos_detalhes = []
 
-        # Limitar a 10 repositórios para evitar lentidão
         repos = user.get_repos()
         count = 0
 
+        # Se não houver filtro de linguagens, aceita por padrão
+        tem_linguagem_requerida = not linguagens_filtro
+
         for repo in repos:
+            langs = repo.get_languages()
+
+            # Verifica se o repo tem alguma das linguagens requisitadas
+            if linguagens_filtro:
+                if any(lang.lower() in (l.lower() for l in langs.keys()) for lang in linguagens_filtro):
+                    tem_linguagem_requerida = True
+
             total_stars += repo.stargazers_count
 
-            langs = repo.get_languages()
             for lang in langs:
                 linguagens_usuario[lang] = linguagens_usuario.get(lang, 0) + 1
 
@@ -87,6 +96,10 @@ def processar_usuario_com_filtros(user, min_stars: int):
             count += 1
             if count >= 10 or (min_stars > 0 and total_stars >= min_stars):
                 break
+
+        # Se usuário não possui repositórios nas linguagens exigidas, rejeita
+        if not tem_linguagem_requerida:
+            return None
 
         if min_stars > 0 and total_stars < min_stars:
             return None
@@ -115,10 +128,10 @@ def buscar_dados_github_com_filtros(
     atividade_recente: bool = False,  # Ignorado para otimizar
     localizacao: Optional[str] = None,
     keywords: Optional[str] = None,
-    max_usuarios: int = 5
+    max_usuarios: int = 20
 ):
     """
-    Busca usuários no GitHub aplicando filtros e retorna o mais adequado.
+    Busca usuários no GitHub aplicando filtros e retorna um usuário aleatório entre os que passam.
     """
     try:
         token = os.getenv("GITHUB_TOKEN")
@@ -149,12 +162,11 @@ def buscar_dados_github_com_filtros(
 
         usuarios_filtrados = []
 
-        # Paralelizar busca e processamento de usuários para melhorar desempenho
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = []
             for usuario in usuarios[:max_usuarios]:
                 user = g.get_user(usuario.login)
-                futures.append(executor.submit(processar_usuario_com_filtros, user, min_stars))
+                futures.append(executor.submit(processar_usuario_com_filtros, user, min_stars, linguagens))
 
             for future in as_completed(futures):
                 resultado = future.result()
@@ -164,8 +176,8 @@ def buscar_dados_github_com_filtros(
         if not usuarios_filtrados:
             raise HTTPException(status_code=404, detail="Nenhum usuário encontrado com os filtros especificados.")
 
-        # Retorna o primeiro usuário que passou nos filtros
-        return usuarios_filtrados[0]
+        usuario_escolhido = random.choice(usuarios_filtrados)
+        return usuario_escolhido
 
     except Exception as e:
         logging.error(f"Erro ao buscar dados do GitHub com filtros: {e}")
