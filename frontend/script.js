@@ -1,32 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // =============================
-  // ELEMENTOS DO DOM
-  // =============================
   const formulario = document.getElementById("formulario");
   const resultadoDiv = document.getElementById("resultado");
   const githubUsernameInput = document.getElementById("githubUsername");
   const themeToggle = document.getElementById("themeToggle");
   const body = document.body;
 
-  // =============================
-  // INICIALIZAÇÃO DO TEMA (CLARO POR PADRÃO)
-  // =============================
   body.classList.add("modo-claro");
   if (themeToggle) {
-    themeToggle.textContent = "☀️"; // Emoji para tema claro
+    themeToggle.textContent = "☀️";
   }
 
-  // =============================
-  // VALIDAÇÃO DE ELEMENTOS ESSENCIAIS
-  // =============================
   if (!formulario || !resultadoDiv || !githubUsernameInput) {
     console.warn("⚠️ Elementos essenciais do DOM não encontrados.");
     return;
   }
 
-  // =============================
-  // ENVIO FORMULÁRIO BUSCA POR USERNAME
-  // =============================
   formulario.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -70,8 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const dados = await resposta.json();
-      console.log("Resposta recebida:", dados);
-
       const conteudo = dados.analise || dados.resposta;
 
       if (conteudo) {
@@ -90,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // =============================
-  // TOGGLE DOS FILTROS AVANÇADOS
-  // =============================
   const toggleFiltersBtn = document.getElementById("toggleFilters");
   const filtrosSection = document.getElementById("filtrosAvancados");
 
@@ -104,9 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =============================
-  // ENVIO FORMULÁRIO FILTROS AVANÇADOS
-  // =============================
   const formFiltros = document.getElementById("formFiltros");
   if (formFiltros) {
     formFiltros.addEventListener("submit", async (e) => {
@@ -115,22 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const botaoFiltros = formFiltros.querySelector("button[type=submit]");
       botaoFiltros.disabled = true;
 
-      // Função para coletar valores de checkboxes pelo nome
       function coletarCheckboxes(nome) {
         const selecionados = formFiltros.querySelectorAll(`input[name='${nome}']:checked`);
         return Array.from(selecionados).map(cb => cb.value);
       }
 
-      // Captura as seleções de cada grupo
       const linguagensSelecionadas = coletarCheckboxes("linguagens");
       const habilidadesSelecionadas = coletarCheckboxes("habilidades");
-      const competenciasSelecionadas = coletarCheckboxes("competencias");
       const metodologiasSelecionadas = coletarCheckboxes("metodologias");
 
-      // Validação: ao menos um checkbox selecionado em qualquer grupo
       const temSelecao = linguagensSelecionadas.length > 0 ||
                          habilidadesSelecionadas.length > 0 ||
-                         competenciasSelecionadas.length > 0 ||
                          metodologiasSelecionadas.length > 0;
 
       if (!temSelecao) {
@@ -157,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const dadosFiltros = {
         linguagens: linguagensSelecionadas,
         habilidades: habilidadesSelecionadas,
-        competencias: competenciasSelecionadas,
         metodologias: metodologiasSelecionadas,
       };
 
@@ -195,9 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =============================
-  // TOGGLE DE TEMA (CLARO/ESCURO)
-  // =============================
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
       const modoClaroAtivo = body.classList.toggle("modo-claro");
