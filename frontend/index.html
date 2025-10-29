@@ -3,38 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Analisador de Perfil GitHub</title>
+  <title>Git Insights</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <!-- Botão de alternância de tema -->
-  <div class="theme-toggle" id="themeToggle" title="Alternar tema">🌙</div>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="logo">💎 <span>Git Insights</span></div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/sobre" class="nav-link">Sobre</a>
+      <a href="#" id="contatoBtn" class="nav-link" title="Clique para copiar o e-mail">Contato</a>
+      <!-- E-mail escondido para copiar -->
+      <span id="emailContato" style="display:none;">leonciodev.contact@gmail.com</span>
+    </div>
+    <button id="themeToggle" class="secondary-btn">🌙</button>
+  </nav>
 
+  <!-- ===== MAIN ===== -->
   <main>
-    <h1>Analisador de Perfil GitHub</h1>
+    <h1>Analisador de Perfil GitHub com IA</h1>
 
-    <!-- Formulário simples de busca por usuário -->
-    <form id="formulario">
-      <input
-        type="text"
-        id="githubUsername"
-        placeholder="Digite o nome de usuário do GitHub (ex: LeoncioDev)"
-        autocomplete="off"
-      />
-      <button type="submit">Analisar</button>
+    <!-- Campo de busca -->
+    <form id="formulario" class="search-box">
+      <input type="text" id="githubUsername" placeholder="Digite o nome do usuário" autocomplete="off" />
     </form>
 
-    <!-- Botão para mostrar/ocultar filtros avançados -->
-    <button id="toggleFilters" type="button" style="margin-top:1rem;">Filtros Avançados 🔍</button>
+    <!-- Botões -->
+    <div class="button-group">
+      <button type="submit" form="formulario" class="primary-btn">Analisar</button>
+      <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
+    </div>
 
-    <!-- Formulário de filtros avançados, inicialmente oculto -->
-    <section id="filtrosAvancados" style="display: none; margin-top: 1rem;">
-      <form id="formFiltros">
-
-        <!-- Linguagens de Programação -->
+    <!-- Filtros avançados -->
+    <section id="filtrosAvancados">
+      <form id="formFiltros" class="filters-form">
+        <!-- Linguagens -->
         <fieldset>
           <legend>Linguagens de Programação</legend>
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+          <div class="filter-options">
             <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
             <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
             <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
@@ -48,10 +55,10 @@
           </div>
         </fieldset>
 
-        <!-- Habilidades Técnicas -->
+        <!-- Habilidades -->
         <fieldset>
           <legend>Habilidades Técnicas</legend>
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+          <div class="filter-options">
             <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
             <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
             <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
@@ -65,24 +72,45 @@
         <!-- Metodologias -->
         <fieldset>
           <legend>Metodologias</legend>
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+          <div class="filter-options">
             <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
             <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
             <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
             <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
-            <label><input type="checkbox" name="metodologias" value="XP" /> XP (Extreme Programming)</label>
+            <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
           </div>
         </fieldset>
 
-        <button type="submit" style="margin-top: 1rem;">Buscar Desenvolvedores</button>
+        <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
       </form>
     </section>
 
-    <section id="resultado" tabindex="-1" style="margin-top: 2rem;"></section>
+    <!-- Resultado / Insights -->
+    <section id="resultado" class="insights" tabindex="-1">
+      <h2>Insights</h2>
+      <p>
+        Aqui serão exibidas as análises e métricas geradas pela IA após analisar um perfil GitHub,
+        incluindo linguagens mais usadas, contribuições e possíveis áreas de especialização.
+      </p>
+      <p>
+        <strong>Análise Detalhada:</strong> O texto gerado exibirá padrões de codificação, principais repositórios e
+        outras informações úteis, mantendo uma leitura clara e moderna.
+      </p>
+    </section>
   </main>
 
-  <!-- Biblioteca para converter Markdown em HTML -->
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">Termos de Serviço</a> | 
+      <a href="#">Política de Privacidade</a>
+    </div>
+    <p>©2025 Git Insights. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="/static/script.js"></script>
+  <script src="/static/contato.js"></script> <!-- Script do botão de contato -->
 </body>
 </html>
