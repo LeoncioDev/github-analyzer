@@ -1,138 +1,188 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ===============================
+  // ELEMENTOS OPCIONAIS
+  // ===============================
   const formulario = document.getElementById("formulario");
   const resultadoDiv = document.getElementById("resultado");
   const githubUsernameInput = document.getElementById("githubUsername");
   const themeToggle = document.getElementById("themeToggle");
   const body = document.body;
+  const loaderContainer = document.getElementById("loader");
 
-  body.classList.add("modo-claro");
+  // ===============================
+  // TEMA PERSISTENTE
+  // ===============================
+  const temaSalvo = localStorage.getItem("tema");
+  if (temaSalvo === "claro") {
+    body.classList.add("modo-claro");
+    if (themeToggle) themeToggle.textContent = "☀️";
+  } else {
+    body.classList.remove("modo-claro");
+    if (themeToggle) themeToggle.textContent = "🌙";
+  }
+
   if (themeToggle) {
-    themeToggle.textContent = "☀️";
-  }
-
-  if (!formulario || !resultadoDiv || !githubUsernameInput) {
-    console.warn("⚠️ Elementos essenciais do DOM não encontrados.");
-    return;
-  }
-
-  formulario.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const botao = formulario.querySelector("button[type=submit]");
-    const username = githubUsernameInput.value.trim();
-
-    if (!username) {
-      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❗ Por favor, insira o nome de usuário do GitHub.</p>`;
-      resultadoDiv.focus();
-      return;
-    }
-
-    botao.disabled = true;
-
-    resultadoDiv.innerHTML = `
-      <p class="carregando" tabindex="0">
-        <span class="loading-container">
-          <span class="loading-text">🔍 Carregando análise</span>
-          <span class="loading-dots">
-            <span class="loading-dot">.</span>
-            <span class="loading-dot">.</span>
-            <span class="loading-dot">.</span>
-          </span>
-        </span>
-      </p>
-    `;
-    resultadoDiv.focus();
-
-    try {
-      const resposta = await fetch("/analisar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username }),
-      });
-
-      if (!resposta.ok) {
-        const dadosErro = await resposta.json().catch(() => ({}));
-        resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}</p>`;
-        resultadoDiv.focus();
-        return;
-      }
-
-      const dados = await resposta.json();
-      const conteudo = dados.analise || dados.resposta;
-
-      if (conteudo) {
-        resultadoDiv.innerHTML = conteudo;
-      } else {
-        resultadoDiv.innerHTML = `<p class="erro" tabindex="0">⚠️ Erro: resposta inesperada do servidor.</p>`;
-      }
-      resultadoDiv.focus();
-
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ao conectar: ${error.message}</p>`;
-      resultadoDiv.focus();
-    } finally {
-      botao.disabled = false;
-    }
-  });
-
-  const toggleFiltersBtn = document.getElementById("toggleFilters");
-  const filtrosSection = document.getElementById("filtrosAvancados");
-
-  if (toggleFiltersBtn && filtrosSection) {
-    toggleFiltersBtn.addEventListener("click", () => {
-      const estaVisivel = filtrosSection.style.display === "block";
-      filtrosSection.style.display = estaVisivel ? "none" : "block";
-      toggleFiltersBtn.textContent = estaVisivel ? "Filtros Avançados 🔍" : "Esconder Filtros ❌";
+    themeToggle.addEventListener("click", () => {
+      const modoClaroAtivo = body.classList.toggle("modo-claro");
+      themeToggle.textContent = modoClaroAtivo ? "☀️" : "🌙";
+      localStorage.setItem("tema", modoClaroAtivo ? "claro" : "escuro");
     });
   }
 
+  // ===============================
+  // FUNÇÕES DE LOADER
+  // ===============================
+  function mostrarLoader() {
+    if (loaderContainer) loaderContainer.style.display = "flex";
+  }
+
+  function esconderLoader() {
+    if (loaderContainer) loaderContainer.style.display = "none";
+  }
+
+  // ===============================
+  // FUNÇÕES DE FEEDBACK NO RESULTADO
+  // ===============================
+  let dotsInterval;
+
+  function startDotsAnimation() {
+    let dots = 0;
+    if (!resultadoDiv) return;
+    dotsInterval = setInterval(() => {
+      const dotsSpan = resultadoDiv.querySelector(".dots");
+      if (dotsSpan) {
+        dotsSpan.textContent = ".".repeat(dots + 1);
+        dots = (dots + 1) % 3;
+      }
+    }, 500);
+  }
+
+  function stopDotsAnimation() {
+    clearInterval(dotsInterval);
+  }
+
+  function mostrarErro(mensagem) {
+    stopDotsAnimation();
+    if (resultadoDiv) {
+      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">${mensagem}</p>`;
+      resultadoDiv.focus();
+    }
+    esconderLoader();
+  }
+
+  function mostrarLoading(mensagem) {
+    if (resultadoDiv) {
+      resultadoDiv.innerHTML = `<p class="carregando" tabindex="0">${mensagem} <span class="dots">.</span></p>`;
+      resultadoDiv.focus();
+      startDotsAnimation();
+      mostrarLoader();
+    }
+  }
+
+  function mostrarAnalise(conteudo) {
+    stopDotsAnimation();
+    if (resultadoDiv) {
+      resultadoDiv.innerHTML = conteudo;
+      resultadoDiv.focus();
+    }
+    esconderLoader();
+  }
+
+  // ===============================
+  // FORMULÁRIO DE ANÁLISE (opcional)
+  // ===============================
+  if (formulario && resultadoDiv && githubUsernameInput) {
+    const botao = formulario.querySelector('button[type=submit]');
+
+    formulario.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = githubUsernameInput.value.trim();
+
+      if (!username) {
+        githubUsernameInput.classList.add("input-erro");
+        mostrarErro("❗ Por favor, insira o nome de usuário do GitHub.");
+        return;
+      } else {
+        githubUsernameInput.classList.remove("input-erro");
+      }
+
+      if (botao) botao.disabled = true;
+      mostrarLoading("🔍 Carregando análise");
+
+      try {
+        const resposta = await fetch("/analisar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username }),
+        });
+
+        if (!resposta.ok) {
+          const dadosErro = await resposta.json().catch(() => ({}));
+          mostrarErro(`❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}`);
+          return;
+        }
+
+        const dados = await resposta.json();
+        const conteudo = dados.analise || dados.resposta;
+
+        if (conteudo) {
+          mostrarAnalise(conteudo);
+        } else {
+          mostrarErro("⚠️ Erro: resposta inesperada do servidor.");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        mostrarErro(`❌ Erro ao conectar: ${error.message}`);
+      } finally {
+        if (botao) botao.disabled = false;
+        esconderLoader();
+      }
+    });
+  }
+
+  // ===============================
+  // FILTROS AVANÇADOS (opcional)
+  // ===============================
+  const toggleFiltersBtn = document.getElementById("toggleFilters");
+  const filtrosSection = document.getElementById("filtrosAvancados");
   const formFiltros = document.getElementById("formFiltros");
+
+  if (toggleFiltersBtn && filtrosSection) {
+    toggleFiltersBtn.addEventListener("click", () => {
+      filtrosSection.classList.toggle("ativo");
+      toggleFiltersBtn.textContent = filtrosSection.classList.contains("ativo")
+        ? "Esconder Filtros ❌"
+        : "Filtros Avançados 🔍";
+    });
+  }
+
   if (formFiltros) {
+    const botaoFiltros = formFiltros.querySelector("button[type=submit]");
+
     formFiltros.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const botaoFiltros = formFiltros.querySelector("button[type=submit]");
-      botaoFiltros.disabled = true;
-
       function coletarCheckboxes(nome) {
-        const selecionados = formFiltros.querySelectorAll(`input[name='${nome}']:checked`);
-        return Array.from(selecionados).map(cb => cb.value);
+        return Array.from(formFiltros.querySelectorAll(`input[name='${nome}']:checked`)).map(cb => cb.value);
       }
 
       const linguagensSelecionadas = coletarCheckboxes("linguagens");
       const habilidadesSelecionadas = coletarCheckboxes("habilidades");
       const metodologiasSelecionadas = coletarCheckboxes("metodologias");
 
-      const temSelecao = linguagensSelecionadas.length > 0 ||
-                         habilidadesSelecionadas.length > 0 ||
-                         metodologiasSelecionadas.length > 0;
-
-      if (!temSelecao) {
-        resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❗ Por favor, selecione ao menos uma opção em algum dos filtros avançados.</p>`;
-        resultadoDiv.focus();
-        botaoFiltros.disabled = false;
+      if (!linguagensSelecionadas.length && !habilidadesSelecionadas.length && !metodologiasSelecionadas.length) {
+        mostrarErro("❗ Selecione pelo menos uma opção em algum filtro.");
+        if (botaoFiltros) botaoFiltros.disabled = false;
         return;
       }
 
-      resultadoDiv.innerHTML = `
-        <p class="carregando" tabindex="0">
-          <span class="loading-container">
-            <span class="loading-text">🔍 Buscando com filtros...</span>
-            <span class="loading-dots">
-              <span class="loading-dot">.</span>
-              <span class="loading-dot">.</span>
-              <span class="loading-dot">.</span>
-            </span>
-          </span>
-        </p>
-      `;
-      resultadoDiv.focus();
+      if (botaoFiltros) botaoFiltros.disabled = true;
+      mostrarLoading("🔍 Buscando com filtros...");
 
       const dadosFiltros = {
         linguagens: linguagensSelecionadas,
         habilidades: habilidadesSelecionadas,
-        metodologias: metodologiasSelecionadas,
+        metodologias: metodologiasSelecionadas
       };
 
       try {
@@ -144,8 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!resposta.ok) {
           const dadosErro = await resposta.json().catch(() => ({}));
-          resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}</p>`;
-          resultadoDiv.focus();
+          mostrarErro(`❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}`);
           return;
         }
 
@@ -153,26 +202,40 @@ document.addEventListener("DOMContentLoaded", () => {
         const conteudo = dados.analise || dados.resposta;
 
         if (conteudo) {
-          resultadoDiv.innerHTML = conteudo;
+          mostrarAnalise(conteudo);
         } else {
-          resultadoDiv.innerHTML = `<p class="erro" tabindex="0">⚠️ Erro: resposta inesperada do servidor.</p>`;
+          mostrarErro("⚠️ Erro: resposta inesperada do servidor.");
         }
-        resultadoDiv.focus();
-
       } catch (error) {
         console.error("Erro na requisição:", error);
-        resultadoDiv.innerHTML = `<p class="erro" tabindex="0">❌ Erro ao conectar: ${error.message}</p>`;
-        resultadoDiv.focus();
+        mostrarErro(`❌ Erro ao conectar: ${error.message}`);
       } finally {
-        botaoFiltros.disabled = false;
+        if (botaoFiltros) botaoFiltros.disabled = false;
+        esconderLoader();
       }
     });
   }
 
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const modoClaroAtivo = body.classList.toggle("modo-claro");
-      themeToggle.textContent = modoClaroAtivo ? "☀️" : "🌙";
+  // ===============================
+  // BOTÃO DE CONTATO COM COPIAR EMAIL (sempre)
+  // ===============================
+  const contatoBtn = document.getElementById("contatoBtn");
+  const emailContato = document.getElementById("emailContato");
+
+  if (contatoBtn && emailContato) {
+    contatoBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const email = emailContato.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(email);
+        contatoBtn.textContent = "📋 E-mail copiado!";
+        setTimeout(() => { contatoBtn.textContent = "Contato"; }, 2000);
+      } catch (err) {
+        console.error("Erro ao copiar e-mail:", err);
+        contatoBtn.textContent = "❌ Erro ao copiar";
+        setTimeout(() => { contatoBtn.textContent = "Contato"; }, 2000);
+      }
     });
   }
+
 });
