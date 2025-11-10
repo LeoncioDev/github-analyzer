@@ -98,9 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const username = githubUsernameInput.value.trim();
 
+      // Pegar o contexto
+      const contextoSelecionado = document.querySelector('Input[name="contexto"]:checked');
+      const contexto = contextoSelecionado ? contextoSelecionado.value : "recrutamento";
+      //--------------------------
+
       if (!username) {
         githubUsernameInput.classList.add("input-erro");
-        mostrarErro("❗ Por favor, insira o nome de usuário do GitHub.");
+        mostrarErro("❗ Por favor, insira o nome de usuário ou URL do GitHub.");
         return;
       } else {
         githubUsernameInput.classList.remove("input-erro");
@@ -113,12 +118,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const resposta = await fetch("/analisar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username }),
+          body: JSON.stringify({ username, contexto }),
         });
 
         if (!resposta.ok) {
           const dadosErro = await resposta.json().catch(() => ({}));
-          mostrarErro(`❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}`);
+          const detalheErro = dadosErro.detail || dadosErro.erro || resposta.statusText;
+          mostrarErro(`❌ Erro ${resposta.status}: ${detalheErro}`);
           return;
         }
 
@@ -139,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
+  
   // ===============================
   // FILTROS AVANÇADOS (opcional)
   // ===============================
@@ -194,7 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!resposta.ok) {
           const dadosErro = await resposta.json().catch(() => ({}));
-          mostrarErro(`❌ Erro ${resposta.status}: ${dadosErro.erro || resposta.statusText}`);
+          const detalheErro = dadosErro.detail || dadosErro.erro || resposta.statusText;
+          mostrarErro(`❌ Erro ${resposta.status}: ${detalheErro}`);
           return;
         }
 
