@@ -1,44 +1,52 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Git Insights</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
-  <!-- ===== NAVBAR ===== -->
   <nav class="navbar">
     <div class="logo">💎 <span>Git Insights</span></div>
     <div class="nav-links">
       <a href="/" class="nav-link">Home</a>
       <a href="/sobre" class="nav-link">Sobre</a>
       <a href="#" id="contatoBtn" class="nav-link" title="Clique para copiar o e-mail">Contato</a>
-      <!-- E-mail escondido para copiar -->
       <span id="emailContato" style="display:none;">leonciodev.contact@gmail.com</span>
     </div>
     <button id="themeToggle" class="secondary-btn">🌙</button>
   </nav>
 
-  <!-- ===== MAIN ===== -->
   <main>
     <h1>Analisador de Perfil GitHub com IA</h1>
 
-    <!-- Campo de busca -->
+    <fieldset class="context-selector">
+      <legend>Qual é o seu objetivo?</legend>
+      <div class="context-options">
+        <label>
+          <input type="radio" name="contexto" value="recrutamento" checked />
+          Avaliar um Candidato
+        </label>
+        <label>
+          <input type="radio" name="contexto" value="autoanalise" />
+          Analisar meu Perfil
+        </label>
+      </div>
+    </fieldset>
     <form id="formulario" class="search-box">
-      <input type="text" id="githubUsername" placeholder="Digite o nome do usuário" autocomplete="off" />
+      <input type="text" id="githubUsername" placeholder="Digite o nome de usuário ou cole a URL" autocomplete="off" />
     </form>
 
-    <!-- Botões -->
     <div class="button-group">
       <button type="submit" form="formulario" class="primary-btn">Analisar</button>
       <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
     </div>
 
-    <!-- Filtros avançados -->
     <section id="filtrosAvancados">
       <form id="formFiltros" class="filters-form">
-        <!-- Linguagens -->
         <fieldset>
           <legend>Linguagens de Programação</legend>
           <div class="filter-options">
@@ -54,8 +62,7 @@
             <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
           </div>
         </fieldset>
-
-        <!-- Habilidades -->
+    
         <fieldset>
           <legend>Habilidades Técnicas</legend>
           <div class="filter-options">
@@ -68,8 +75,7 @@
             <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
           </div>
         </fieldset>
-
-        <!-- Metodologias -->
+    
         <fieldset>
           <legend>Metodologias</legend>
           <div class="filter-options">
@@ -80,12 +86,11 @@
             <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
           </div>
         </fieldset>
-
+    
         <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
       </form>
     </section>
 
-    <!-- Resultado / Insights -->
     <section id="resultado" class="insights" tabindex="-1">
       <h2>Insights</h2>
       <p>
@@ -99,18 +104,17 @@
     </section>
   </main>
 
-  <!-- ===== FOOTER ===== -->
   <footer>
     <div class="footer-links">
-      <a href="#">Termos de Serviço</a> | 
+      <a href="#">Termos de Serviço</a> |
       <a href="#">Política de Privacidade</a>
     </div>
     <p>©2025 Git Insights. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- ===== SCRIPTS ===== -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="/static/script.js"></script>
-  <script src="/static/contato.js"></script> <!-- Script do botão de contato -->
+  <script src="/static/contato.js"></script>
 </body>
+
 </html>
