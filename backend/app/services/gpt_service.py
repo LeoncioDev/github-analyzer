@@ -3,91 +3,146 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def gerar_analise_gpt(nome, bio, seguidores, seguindo, public_repos, linguagens, repos_detalhes, readme_text=""):
+def gerar_analise_gpt(nome, bio, seguidores, seguindo, public_repos, linguagens, repos_detalhes, readme_text="", contexto: str = "recrutamento", login: str="", html_url: str=""):
     try:
-        # Garantir que linguagens seja um dict para ordenação, caso contrário usar lista simples
         if isinstance(linguagens, dict):
-            principais = ", ".join(sorted(linguagens, key=linguagens.get, reverse=True)[:3])
+            principais_lista = sorted(linguagens, key=linguagens.get, reverse=True)[:3]
+            principais = ", ".join(principais_lista) if principais_lista else "N/A"
         elif isinstance(linguagens, list):
-            principais = ", ".join(linguagens[:3])
+            principais = ", ".join(linguagens[:3]) if linguagens else "N/A"
         else:
             principais = "N/A"
 
-        destacados = ", ".join(repos_detalhes[:3]) if repos_detalhes else "Nenhum repositório destacado."
+        # Pegar os 5 repositórios mais relevantes para a IA analisar
+        destacados_lista = repos_detalhes[:5]
+        destacados_str = "\n".join([f"<li>{repo}</li>" for repo in destacados_lista])
+        if not destacados_str:
+            destacados_str = "<li>Nenhum repositório de projeto encontrado.</li>"
 
-        # Limitar tamanho do README para evitar erros de tamanho de prompt
-        readme_limitado = readme_text[:2000] if readme_text else ""
+        readme_limitado = readme_text[:2000] if readme_text else "Nenhum README de perfil fornecido."
 
-        prompt = f"""
-Você é um analista técnico sênior especializado em avaliação detalhada de perfis GitHub para recrutadores e avaliadores técnicos exigentes.
+        prompt = ""
+        
+        # --- ESTILIZAÇÃO CSS INLINE PARA OS CARDS ---
+        card_style = "border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 16px;"
 
-O conteúdo do README do perfil do desenvolvedor <strong>{nome}</strong> é o seguinte:
-\"\"\"
-{readme_limitado}
-\"\"\"
-
-Com base nisso e nos dados do perfil, gere um relatório técnico profissional em HTML limpo, sem usar blocos de código (```), nem marcação Markdown. Use somente tags HTML como <h2>, <h3>, <p>, <ul>, <li>, <strong>, <span style="color:green;">, <span style="color:red;"> e <span style="color:blue;">.
-
-Use:
-- <h2> para seções principais
-- <h3> para subtítulos quando necessário
-- <p> para parágrafos explicativos
-- <ul> e <li> para listas
-- <strong> para destacar nomes, pontos-chave e insights importantes
-- <span style="color:green;"> para destacar pontos fortes e realizações positivas
-- <span style="color:red;"> para alertas, problemas ou áreas a melhorar
-- <span style="color:blue;"> para sugestões específicas de melhoria, caso necessário
-
-Regras:
-- Analise minuciosamente o perfil do desenvolvedor <strong>{nome}</strong> e os repositórios destacados: {destacados}.
-- Avalie o conteúdo do README do perfil e dos READMEs dos repositórios (quando fornecidos).
-- Extraia e destaque quaisquer dados públicos de contato que encontrar no README do perfil ou em READMEs, como e-mail, telefone ou LinkedIn.
-- Não assuma automaticamente a ausência de testes ou documentação apenas pela falta de arquivos explícitos. Considere que muitos projetos são voltados para avaliadores técnicos, que podem entender o código sem documentação extensa.
-- Não inclua recomendações genéricas. Só sugira melhorias específicas e claras se identificar pontos que realmente precisam de atenção.
-- Para cada repositório destacado, detalhe: objetivo, aplicabilidade, qualidade e organização do código, documentação (clareza, completude, atualizações), presença e qualidade de testes automatizados, CI/CD ou outras práticas profissionais.
-- Informe a coerência do portfólio e diversidade tecnológica.
-- Forneça um resumo final objetivo, destacando os pontos fortes e qualquer aspecto que mereça atenção, sem repetir recomendações vazias.
-
-Estrutura do relatório:
-
-<h2>Resumo do Perfil</h2>
-<p>Resumo detalhado e objetivo sobre o desenvolvedor <strong>{nome}</strong>, sua bio, principais tecnologias usadas e uma visão geral do perfil.</p>
-
-<h2>Análise Técnica dos Repositórios Destacados</h2>
-<p>Para cada repositório listado, comente:</p>
-<ul>
-  <li>Objetivo e aplicabilidade do projeto</li>
-  <li>Qualidade e organização do código</li>
-  <li>Documentação: clareza, completude e atualizações</li>
-  <li>Presença e qualidade de testes automatizados, CI/CD ou outras práticas profissionais</li>
-</ul>
-
-<h2>Contato e Redes</h2>
-<p>Liste qualquer informação de contato pública disponível, extraída do README do perfil e dos repositórios, como e-mail, telefone ou LinkedIn.</p>
-
-<h2>Resumo Final</h2>
-<p>Breve avaliação geral com destaque para pontos fortes e possíveis áreas que merecem atenção, caso existam.</p>
-
-Dados do Perfil:
-Nome: {nome}
-Bio: {bio}
-Seguidores: {seguidores}
-Seguindo: {seguindo}
-Repositórios públicos: {public_repos}
-Tecnologias principais: {principais}
-Repositórios destacados: {destacados}
+        # --- REGRAS GERAIS DE HTML (PARA AMBOS OS PROMPTS) ---
+        regras_html = f"""
+REGRAS DE GERAÇÃO:
+1.  **Gere APENAS HTML.** Nenhum Markdown (como `###` ou `**...**`) deve ser usado.
+2.  **NÃO** inclua `<html>`, `<body>`, `<head>`, `<style>` ou `<script>`. Gere apenas as tags de conteúdo.
+3.  Use `<h2>` para títulos de seção, `<h3>` para nomes de repositórios.
+4.  Use `<strong>` para ênfase, `<p>` para parágrafos, `<ul>` e `<li>` para listas.
+5.  **ESTRUTURA VISUAL:** Envolva CADA seção principal em um `<div>` com este estilo inline exato:
+    `<div style="{card_style}">...</div>`
+6.  Coloque o título da seção (ex: `<h2>...</h2>`) DENTRO de cada `<div>`.
 """
 
+        # --- LÓGICA DE CONTEXTO ---
+        if contexto == "autoanalise":
+            # PROMPT 1: MENTOR
+            prompt = f"""
+{regras_html}
+
+PERSONA: Você é um Mentor de Carreira e Desenvolvedor Sênior (Tech Lead). Seu tom é construtivo, encorajador e prático.
+
+OBJETIVO: Analisar o perfil de {nome} e fornecer um plano de ação detalhado para melhoria, focando nos projetos.
+
+DADOS DO PERFIL:
+- Nome: {nome} (@{login})
+- Bio: {bio}
+- README do Perfil: "{readme_limitado}"
+- Principais Tecnologias: {principais}
+- Repositórios para análise:
+<ul>
+{destacados_str}
+</ul>
+
+TAREFA: Gere o relatório HTML.
+1.  Crie o card de "Seus Pontos Fortes Atuais".
+2.  Crie o card de "Análise Detalhada dos Seus Projetos".
+3.  **Dentro desse segundo card:** Para CADA repositório da lista, você DEVE gerar um `<h3>` com o nome do projeto.
+4.  **Abaixo de cada `<h3>`:** Você DEVE gerar uma `<ul>` com 3 `<li>`s:
+    - `<li><strong>O que foi bem feito:</strong> ... (sua análise)</li>`
+    - `<li><strong>Ponto de Melhoria (Ação):</strong> ... (sua análise, usando ✅/❌)</li>`
+    - `<li><strong>Próximo Nível (Sugestão):</strong> ... (sua análise)</li>`
+5.  Crie o card final de "Plano de Ação (Resumo)".
+
+ESTRUTURA HTML DE SAÍDA (use-a como guia):
+
+<div style="{card_style}">
+    <h2>🚀 Seus Pontos Fortes Atuais</h2>
+    <p>Seja encorajador. Destaque os pontos positivos que {nome} já possui (baseado na bio, no README do perfil e nas tecnologias).</p>
+</div>
+
+<div style="{card_style}">
+    <h2>💡 Análise Detalhada dos Seus Projetos</h2>
+    
+    </div>
+
+<div style="{card_style}">
+    <h2>🎯 Plano de Ação (Resumo)</h2>
+    <p>Com base na análise dos projetos, resuma as 3 principais ações que {nome} deve tomar para elevar o nível do seu portfólio.</p>
+</div>
+"""
+        else:
+            # PROMPT 2: ANALISTA TÉCNICO
+            prompt = f"""
+{regras_html}
+
+PERSONA: Você é um Analista Técnico Sênior (Tech Recruiter). Seu tom é profissional, objetivo e analítico.
+
+OBJETIVO: Avaliar o perfil de {nome} para uma vaga de desenvolvedor, focando na análise técnica de seus repositórios.
+
+DADOS DO PERFIL:
+- Nome: {nome} (@{login})
+- Bio: {bio}
+- README do Perfil: "{readme_limitado}"
+- Principais Tecnologias: {principais}
+- Repositórios para análise:
+<ul>
+{destacados_str}
+</ul>
+
+TAREFA: Gere o relatório HTML.
+1.  Primeiro, crie um card de "Resumo do Perfil e Veredito".
+2.  Segundo, crie um card de "Análise Técnica Detalhada".
+3.  **Dentro desse segundo card:** Para CADA repositório da lista, você DEVE gerar um `<h3>` com o nome do projeto.
+4.  **Abaixo de cada `<h3>`:** Você DEVE gerar uma `<ul>` com 4 `<li>`s:
+    - `<li><strong>Objetivo Inferido:</strong> ... (sua análise)</li>`
+    - `<li><strong>Análise Técnica:</strong> ... (sua análise)</li>`
+    - `<li><strong>Qualidade e Documentação:</strong> ... (sua análise, usando ✅/❌)</li>`
+    - `<li><strong>Sinal de Senioridade:</strong> ... (sua análise)</li>`
+
+ESTRUTURA HTML DE SAÍDA (use-a como guia):
+
+<div style="{card_style}">
+    <h2>📊 Resumo do Perfil e Veredito</h2>
+    <p>Resumo objetivo sobre {nome} (bio, tecnologias principais). Avalie a coerência do perfil.</p>
+    <p>Finalize com um veredito curto. Use spans coloridos para o status:</p>
+    <ul>
+        <li><span style="color:green;">Veredito: Candidato promissor.</span></li>
+    </ul>
+</div>
+
+<div style="{card_style}">
+    <h2>🔍 Análise Técnica Detalhada dos Repositórios</h2>
+
+    </div>
+"""
+        # --- FIM DA LÓGICA DE CONTEXTO ---
+        
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=1400,
-            temperature=0.6,
+            max_tokens=2000, 
+            temperature=0.4,
         )
 
         return response.choices[0].message.content.strip()
 
     except Exception as e:
-        # Log de erro pode ser adaptado conforme seu sistema de logs
         print(f"Erro ao gerar análise GPT: {e}")
-        return f"<p class='erro'>Erro ao gerar análise: {e}</p>"
+        # Retornar o erro em um 'card' de erro
+        card_style_erro = "border: 1px solid #ff6b6b; border-radius: 8px; padding: 16px; margin-bottom: 16px; background-color: #ff6b6b20;"
+        return f'<div style="{card_style_erro}"><h2>❌ Erro ao Gerar Análise</h2><p class="erro">Detalhe: {e}</p></div>'
