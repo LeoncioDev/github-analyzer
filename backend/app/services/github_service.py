@@ -2,11 +2,12 @@
 import os
 import logging
 import random
-from github import Github
+from github import Github, UnknownObjectException
 from fastapi import HTTPException
 from typing import Optional, List
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 
 # Carrega o .env
 load_dotenv()
@@ -21,7 +22,7 @@ if not GITHUB_TOKEN:
 g = Github(GITHUB_TOKEN)
 
 def buscar_dados_github(username: str):
-    """Busca dados básicos e informações dos repositórios de um usuário GitHub."""
+    """ Busca dados básicos, README do perfil e informações dos repositórios."""
     try:
         user = g.get_user(username)
 
@@ -31,12 +32,30 @@ def buscar_dados_github(username: str):
         seguindo = user.following
         public_repos = user.public_repos
 
+        # --- Buscar README do Perfil ---
+        readme_text = ""
+        try:
+            readme_repo = user.get_repo(username)
+            readme_content = readme_repo.get_readme().decoded_content.decode('utf-8')
+            readme_text = readme_content
+            logging.info(f"✅ README do perfil de {username} encontrado.")
+        except UnknownObjectException:
+            logging.warning(f"README de perfil de {username} não encontrado.")
+            readme_text = "Nenhum README de perfil público encontrado."
+        except Exception as e:
+            logging.warning(f"Erro ao tentar buscar README do perfil de {username}: {e}")
+            readme_text = "Erro ao processar README do perfil."
+        # ----------
+
         repos = user.get_repos()
         linguagens = {}
         repos_detalhes = []
 
         for repo in repos:
             try:
+                if repo.name == username:
+                    continue
+                    
                 langs = repo.get_languages()
                 for lang in langs:
                     linguagens[lang] = linguagens.get(lang, 0) + 1
@@ -44,15 +63,25 @@ def buscar_dados_github(username: str):
                 desc = repo.description or "Sem descrição"
                 stars = repo.stargazers_count
                 lang_str = ", ".join(langs.keys()) or "sem linguagem"
-                detalhes = f"{repo.name} - {desc} ({lang_str}) - ⭐ {stars}"
+
+                # --- Verificação de README do repositório ---
+                readme_info = ""
+                try:
+                    repo.get_readme()
+                    readme_info = "✅ README"
+                except UnknownObjectException:
+                    readme_info = "❌ Sem README"
+                # --- FIM DA VERIFICAÇÃO ---
+                
+                detalhes = f"{repo.name} ({lang_str}) - {readme_info} - ⭐ {stars} - {desc}"
                 repos_detalhes.append(detalhes)
 
             except Exception as e:
                 logging.warning(f"Erro ao processar repo {repo.name}: {e}")
 
-        if not linguagens:
-            raise HTTPException(status_code=404, detail="Não foi possível extrair linguagens do perfil.")
-
+        if not linguagens and not repos_detalhes:
+             logging.warning(f"Nenhuma linguagem ou repositório (além do README) encontrado para {username}.")
+             
         return {
             "nome": nome,
             "bio": bio,
@@ -61,8 +90,12 @@ def buscar_dados_github(username: str):
             "public_repos": public_repos,
             "linguagens": linguagens,
             "repos_detalhes": repos_detalhes,
+            "readme_text": readme_text,
         }
 
+    except UnknownObjectException:
+        logging.error(f"Usuário GitHub '{username}' não encontrado.")
+        raise HTTPException(status_code=404, detail=f"Usuário GitHub '{username}' não encontrado.")
     except Exception as e:
         logging.error(f"Erro ao buscar dados do GitHub: {e}")
         raise HTTPException(status_code=400, detail=f"Erro ao acessar GitHub: {str(e)}")
@@ -104,12 +137,16 @@ def processar_usuario_com_filtros(user, min_stars: int, linguagens_filtro: Optio
 
         return {
             "nome": user.name or user.login,
+            "login": user.login,
+            "html_url": user.html_url,
             "bio": user.bio or "Sem biografia.",
             "seguidores": user.followers,
             "seguindo": user.following,
             "public_repos": user.public_repos,
             "linguagens": linguagens_usuario,
             "repos_detalhes": repos_detalhes,
+            # Adicionado para manter a compatibilidade com o gpt_service
+            "readme_text": f"README do perfil de {user.login} não buscado (análise de filtro)."
         }
 
     except Exception as e:
