@@ -480,6 +480,127 @@ footer a:hover {
 }
 
 /* ===========================
+   SELETOR DE CONTEXTO
+=========================== */
+.context-selector {
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 550px;
+  width: 100%;
+}
+
+.context-selector legend {
+  padding: 0 0.5rem;
+  font-weight: 600;
+  color: #c9d1d9;
+}
+
+.context-selector .context-options {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.context-selector label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.context-selector input[type="radio"] {
+  /* Estilo moderno para radio */
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.25em;
+  height: 1.25em;
+  border: 2px solid #58a6ff;
+  border-radius: 50%;
+  transition: 0.2s all ease;
+  cursor: pointer;
+}
+
+.context-selector input[type="radio"]:checked {
+  background-color: #58a6ff;
+  border: 4px solid #161b22;
+  /* Cria o efeito de "círculo interno" */
+  outline: 2px solid #58a6ff;
+}
+
+/* Ajustes Tema Claro */
+body.modo-claro .context-selector {
+  border-color: #ccc;
+}
+
+body.modo-claro .context-selector legend {
+  color: #222222;
+}
+
+body.modo-claro .context-selector input[type="radio"] {
+  border-color: #1a73e8;
+}
+
+body.modo-claro .context-selector input[type="radio"]:checked {
+  background-color: #1a73e8;
+  border: 4px solid #ffffff;
+  outline: 2px solid #1a73e8;
+}
+
+/* ===========================
+   ESTILOS FILTROS AVANÇADOS
+=========================== */
+.filters-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.filter-group-toggles {
+  display: flex;
+  gap: 1rem;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.toggle-label span {
+  font-weight: 500;
+}
+
+/* Ajustes Tema Claro */
+body.modo-claro .filter-field label {
+  color: #222222;
+}
+
+body.modo-claro .filter-field input[type="text"],
+body.modo-claro .filter-field input[type="number"] {
+  background-color: #ffffff;
+  color: #222222;
+  border: 1px solid #ccc;
+}
+
+body.modo-claro .filter-field input[type="text"]:focus,
+body.modo-claro .filter-field input[type="number"]:focus {
+  border-color: #1a73e8;
+  background-color: #fff;
+}
+
+#filtrosAvancados.ativo {
+  max-height: 220px;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* ===========================
    RESPONSIVIDADE
 =========================== */
 @media (max-width: 900px) {
