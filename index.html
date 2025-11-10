@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Git Insights</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">💎 <span>Git Insights</span></div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/sobre" class="nav-link">Sobre</a>
+      <a href="#" id="contatoBtn" class="nav-link" title="Clique para copiar o e-mail">Contato</a>
+      <span id="emailContato" style="display:none;">leonciodev.contact@gmail.com</span>
+    </div>
+    <button id="themeToggle" class="secondary-btn">🌙</button>
+  </nav>
+
+  <main>
+    <h1>Analisador de Perfil GitHub com IA</h1>
+
+    <fieldset class="context-selector">
+      <legend>Qual é o seu objetivo?</legend>
+      <div class="context-options">
+        <label>
+          <input type="radio" name="contexto" value="recrutamento" checked />
+          Avaliar um Candidato
+        </label>
+        <label>
+          <input type="radio" name="contexto" value="autoanalise" />
+          Analisar meu Perfil
+        </label>
+      </div>
+    </fieldset>
+    <form id="formulario" class="search-box">
+      <input type="text" id="githubUsername" placeholder="Digite o nome de usuário ou cole a URL" autocomplete="off" />
+    </form>
+
+    <div class="button-group">
+      <button type="submit" form="formulario" class="primary-btn">Analisar</button>
+      <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
+    </div>
+
+    <section id="filtrosAvancados">
+      <form id="formFiltros" class="filters-form">
+        <fieldset>
+          <legend>Linguagens de Programação</legend>
+          <div class="filter-options">
+            <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
+            <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
+            <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
+            <label><input type="checkbox" name="linguagens" value="C++" /> C++</label>
+            <label><input type="checkbox" name="linguagens" value="Ruby" /> Ruby</label>
+            <label><input type="checkbox" name="linguagens" value="TypeScript" /> TypeScript</label>
+            <label><input type="checkbox" name="linguagens" value="Go" /> Go</label>
+            <label><input type="checkbox" name="linguagens" value="PHP" /> PHP</label>
+            <label><input type="checkbox" name="linguagens" value="C#" /> C#</label>
+            <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
+          </div>
+        </fieldset>
+    
+        <fieldset>
+          <legend>Habilidades Técnicas</legend>
+          <div class="filter-options">
+            <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
+            <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
+            <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
+            <label><input type="checkbox" name="habilidades" value="CI/CD" /> CI/CD</label>
+            <label><input type="checkbox" name="habilidades" value="AWS" /> AWS</label>
+            <label><input type="checkbox" name="habilidades" value="Azure" /> Azure</label>
+            <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
+          </div>
+        </fieldset>
+    
+        <fieldset>
+          <legend>Metodologias</legend>
+          <div class="filter-options">
+            <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
+            <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
+            <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
+            <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
+            <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
+          </div>
+        </fieldset>
+    
+        <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
+      </form>
+    </section>
+
+    <section id="resultado" class="insights" tabindex="-1">
+      <h2>Insights</h2>
+      <p>
+        Aqui serão exibidas as análises e métricas geradas pela IA após analisar um perfil GitHub,
+        incluindo linguagens mais usadas, contribuições e possíveis áreas de especialização.
+      </p>
+      <p>
+        <strong>Análise Detalhada:</strong> O texto gerado exibirá padrões de codificação, principais repositórios e
+        outras informações úteis, mantendo uma leitura clara e moderna.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Termos de Serviço</a> |
+      <a href="#">Política de Privacidade</a>
+    </div>
+    <p>©2025 Git Insights. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/static/script.js"></script>
+  <script src="/static/contato.js"></script>
+</body>
+
+</html>
