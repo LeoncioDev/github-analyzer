@@ -313,7 +313,7 @@ ESTRUTURA HTML DE SAÍDA (use-a como guia):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-5",
+            model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=2500,
             temperature=0.7,
