@@ -20,89 +20,126 @@
     <button id="themeToggle" class="secondary-btn">🌙</button>
   </nav>
 
-  <main>
-    <h1>Analisador de Perfil GitHub com IA</h1>
+<main>
+  <h1>Analisador de Perfil GitHub com IA</h1>
 
-    <fieldset class="context-selector">
-      <legend>Qual é o seu objetivo?</legend>
-      <div class="context-options">
-        <label>
-          <input type="radio" name="contexto" value="recrutamento" checked />
-          Avaliar um Candidato
-        </label>
-        <label>
-          <input type="radio" name="contexto" value="autoanalise" />
-          Analisar meu Perfil
-        </label>
-      </div>
+  <fieldset class="context-selector">
+    <legend>Qual é o seu objetivo?</legend>
+    <div class="context-options">
+      <label>
+        <input type="radio" name="contexto" value="recrutamento" checked />
+        Avaliar um Candidato
+      </label>
+      <label>
+        <input type="radio" name="contexto" value="autoanalise" />
+        Analisar meu Perfil
+      </label>
+    </div>
+  </fieldset>
+
+  <div id="simpleAnalysisSection">
+
+    <fieldset id="rankingToggleField" class="filter-switch-field">
+      <label for="toggleRanking" class="filter-switch-label">
+        <span>Comparar múltiplos candidatos com uma vaga?</span>
+        <div class="toggle-switch">
+          <input type="checkbox" id="toggleRanking" name="toggleRanking" />
+          <span class="slider"></span>
+        </div>
+      </label>
     </fieldset>
     <form id="formulario" class="search-box">
       <input type="text" id="githubUsername" placeholder="Digite o nome de usuário ou cole a URL" autocomplete="off" />
     </form>
+  </div>
 
-    <div class="button-group">
-      <button type="submit" form="formulario" class="primary-btn">Analisar</button>
-      <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
-    </div>
+  <div id="rankingAnalysisSection" class="hidden">
+    <form id="formRanking" class="ranking-form">
+      <fieldset>
+        <legend>1. Descrição da Vaga</legend>
+        <textarea id="jobDescription" rows="8"
+          placeholder="Cole a descrição da vaga (requisitos, tecnologias, etc.) aqui..."></textarea>
+      </fieldset>
 
-    <section id="filtrosAvancados">
-      <form id="formFiltros" class="filters-form">
-        <fieldset>
-          <legend>Linguagens de Programação</legend>
-          <div class="filter-options">
-            <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
-            <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
-            <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
-            <label><input type="checkbox" name="linguagens" value="C++" /> C++</label>
-            <label><input type="checkbox" name="linguagens" value="Ruby" /> Ruby</label>
-            <label><input type="checkbox" name="linguagens" value="TypeScript" /> TypeScript</label>
-            <label><input type="checkbox" name="linguagens" value="Go" /> Go</label>
-            <label><input type="checkbox" name="linguagens" value="PHP" /> PHP</label>
-            <label><input type="checkbox" name="linguagens" value="C#" /> C#</label>
-            <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
-          </div>
-        </fieldset>
-    
-        <fieldset>
-          <legend>Habilidades Técnicas</legend>
-          <div class="filter-options">
-            <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
-            <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
-            <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
-            <label><input type="checkbox" name="habilidades" value="CI/CD" /> CI/CD</label>
-            <label><input type="checkbox" name="habilidades" value="AWS" /> AWS</label>
-            <label><input type="checkbox" name="habilidades" value="Azure" /> Azure</label>
-            <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
-          </div>
-        </fieldset>
-    
-        <fieldset>
-          <legend>Metodologias</legend>
-          <div class="filter-options">
-            <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
-            <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
-            <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
-            <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
-            <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
-          </div>
-        </fieldset>
-    
-        <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
-      </form>
-    </section>
+      <fieldset>
+        <legend>2. Adicione os Candidatos</legend>
+        <div class="candidate-input-group">
+          <input type="text" id="newCandidateUrl" placeholder="Cole a URL ou nome de usuário do GitHub" />
+          <button type="button" id="addCandidateBtn" class="secondary-btn">Adicionar</button>
+        </div>
+        <div id="candidateList" class="candidate-list">
+        </div>
+      </fieldset>
 
-    <section id="resultado" class="insights" tabindex="-1">
-      <h2>Insights</h2>
-      <p>
-        Aqui serão exibidas as análises e métricas geradas pela IA após analisar um perfil GitHub,
-        incluindo linguagens mais usadas, contribuições e possíveis áreas de especialização.
-      </p>
-      <p>
-        <strong>Análise Detalhada:</strong> O texto gerado exibirá padrões de codificação, principais repositórios e
-        outras informações úteis, mantendo uma leitura clara e moderna.
-      </p>
-    </section>
-  </main>
+      <div class="button-group">
+        <button type="submit" class="primary-btn">Analisar e Rankear Candidatos</button>
+        <button type="button" id="cancelRankingBtn" class="secondary-btn">Voltar</button>
+      </div>
+    </form>
+  </div>
+  <div id="simpleAnalysisButtons" class="button-group">
+    <button type="submit" form="formulario" class="primary-btn">Analisar</button>
+    <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
+  </div>
+
+  <section id="filtrosAvancados">
+    <form id="formFiltros" class="filters-form">
+      <fieldset>
+        <legend>Linguagens de Programação</legend>
+        <div class="filter-options">
+          <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
+          <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
+          <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
+          <label><input type="checkbox" name="linguagens" value="C++" /> C++</label>
+          <label><input type="checkbox" name="linguagens" value="Ruby" /> Ruby</label>
+          <label><input type="checkbox" name="linguagens" value="TypeScript" /> TypeScript</label>
+          <label><input type="checkbox" name="linguagens" value="Go" /> Go</label>
+          <label><input type="checkbox" name="linguagens" value="PHP" /> PHP</label>
+          <label><input type="checkbox" name="linguagens" value="C#" /> C#</label>
+          <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Habilidades Técnicas</legend>
+        <div class="filter-options">
+          <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
+          <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
+          <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
+          <label><input type="checkbox" name="habilidades" value="CI/CD" /> CI/CD</label>
+          <label><input type="checkbox" name="habilidades" value="AWS" /> AWS</label>
+          <label><input type="checkbox" name="habilidades" value="Azure" /> Azure</label>
+          <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Metodologias</legend>
+        <div class="filter-options">
+          <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
+          <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
+          <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
+          <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
+          <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
+    </form>
+  </section>
+
+  <section id="resultado" class="insights" tabindex="-1">
+    <h2>Insights</h2>
+    <p>
+      Aqui serão exibidas as análises e métricas geradas pela IA após analisar um perfil GitHub,
+      incluindo linguagens mais usadas, contribuições e possíveis áreas de especialização.
+    </p>
+    <p>
+      <strong>Análise Detalhada:</strong> O texto gerado exibirá padrões de codificação, principais repositórios e
+      outras informações úteis, mantendo uma leitura clara e moderna.
+    </p>
+  </section>
+</main>
 
   <footer>
     <div class="footer-links">
