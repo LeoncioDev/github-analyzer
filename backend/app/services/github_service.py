@@ -1,4 +1,3 @@
-# github_service.py
 import os
 import logging
 import random
