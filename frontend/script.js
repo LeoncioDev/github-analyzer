@@ -1,154 +1,99 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ===============================
-  // ELEMENTOS DA PÁGINA
-  // ===============================
-  const simpleAnalysisSection = document.getElementById("simpleAnalysisSection");
-  const simpleAnalysisButtons = document.getElementById("simpleAnalysisButtons");
-  const rankingAnalysisSection = document.getElementById("rankingAnalysisSection");
-  const rankingToggleField = document.getElementById("rankingToggleField");
-  const toggleRankingCheckbox = document.getElementById("toggleRanking");
+  // --- SELETORES PRINCIPAIS ---
   const contextRadios = document.querySelectorAll('input[name="contexto"]');
-  
-  // Elementos dos formulários
-  const formulario = document.getElementById("formulario");
-  const githubUsernameInput = document.getElementById("githubUsername");
+  const analysisArea = document.getElementById("analysisArea");
+  const advancedFiltersArea = document.getElementById("advancedFiltersArea");
+
+  // Sub-seções de Recrutador
+  const rankingToggleWrapper = document.getElementById("rankingToggleWrapper");
+  const toggleRanking = document.getElementById("toggleRanking");
+  const simpleFormContainer = document.getElementById("simpleFormContainer");
+  const rankingFormContainer = document.getElementById("rankingFormContainer");
+
+  // Inputs e Formulários
+  const formSimple = document.getElementById("formulario");
+  const githubUsername = document.getElementById("githubUsername");
   const formRanking = document.getElementById("formRanking");
+  const formFiltros = document.getElementById("formFiltros");
+  
   const cancelRankingBtn = document.getElementById("cancelRankingBtn");
-  
-  // Elementos de feedback
+
+  // Resultados e Feedback
   const resultadoDiv = document.getElementById("resultado");
-  const loaderContainer = document.getElementById("loader");
+  const loader = document.getElementById("loader");
+  const errorMessage = document.getElementById("errorMessage");
   
-  // ===============================
-  // TEMA
-  // ===============================
+  // Tema
   const themeToggle = document.getElementById("themeToggle");
   const body = document.body;
-  
-  const temaSalvo = localStorage.getItem("tema");
-  if (temaSalvo === "claro") {
+
+  // --- GERENCIAMENTO DE TEMA  ---
+  // Carregar tema salvo
+  if (localStorage.getItem("tema") === "claro") {
     body.classList.add("modo-claro");
-    if (themeToggle) themeToggle.textContent = "☀️";
-  } else {
-    body.classList.remove("modo-claro");
-    if (themeToggle) themeToggle.textContent = "🌙";
+    themeToggle.textContent = "☀️";
   }
 
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const modoClaroAtivo = body.classList.toggle("modo-claro");
-      themeToggle.textContent = modoClaroAtivo ? "☀️" : "🌙";
-      localStorage.setItem("tema", modoClaroAtivo ? "claro" : "escuro");
-    });
-  }
+  themeToggle.addEventListener("click", () => {
+    const isLight = body.classList.toggle("modo-claro");
+    themeToggle.textContent = isLight ? "☀️" : "🌙";
+    localStorage.setItem("tema", isLight ? "claro" : "escuro");
+  });
 
-  // ===============================
-  // FUNÇÕES DE FEEDBACK
-  // ===============================
-  let dotsInterval;
-
-  function startDotsAnimation() {
-    let dots = 0;
-    if (!resultadoDiv) return;
-    dotsInterval = setInterval(() => {
-      const dotsSpan = resultadoDiv.querySelector(".dots");
-      if (dotsSpan) {
-        dotsSpan.textContent = ".".repeat(dots + 1);
-        dots = (dots + 1) % 3;
-      }
-    }, 500);
-  }
-
-  function stopDotsAnimation() {
-    clearInterval(dotsInterval);
-  }
-
-  function mostrarErro(mensagem) {
-    stopDotsAnimation();
-    if (resultadoDiv) {
-      resultadoDiv.innerHTML = `<p class="erro" tabindex="0">${mensagem}</p>`;
-      resultadoDiv.classList.add("ativo"); // MOSTRAR a caixa de insights com o erro
-      resultadoDiv.focus();
-    }
-    if (loaderContainer) loaderContainer.style.display = "none";
-  }
-
-  function mostrarLoading(mensagem) {
-    if (resultadoDiv) {
-      resultadoDiv.innerHTML = `<p class="carregando" tabindex="0">${mensagem} <span class="dots">.</span></p>`;
-      resultadoDiv.classList.add("ativo"); // MOSTRAR a caixa de insights com o loading
-      resultadoDiv.focus();
-      startDotsAnimation();
-    }
-    if (loaderContainer) loaderContainer.style.display = "flex";
-  }
-
-  function mostrarAnalise(conteudo) {
-    stopDotsAnimation();
-    if (resultadoDiv) {
-      if (conteudo) {
-        resultadoDiv.innerHTML = conteudo;
-        resultadoDiv.classList.add("ativo"); // MOSTRAR a caixa de insights
-        resultadoDiv.focus();
-      } else {
-        // Se o conteúdo for vazio, ESCONDER a caixa
-        resultadoDiv.innerHTML = "";
-        resultadoDiv.classList.remove("ativo");
-      }
-    }
-    if (loaderContainer) loaderContainer.style.display = "none";
-  }
-  
-  // ===============================
-  // LÓGICA DE TROCA DE FORMULÁRIO
-  // ===============================
-
-  function updateFormVisibility() {
-    const selectedContext = document.querySelector('input[name="contexto"]:checked').value;
-    const isRankingActive = toggleRankingCheckbox.checked;
-
-    if (selectedContext === 'autoanalise') {
-      // MODO: ANALISAR MEU PERFIL
-      rankingToggleField.classList.add('hidden');
-      simpleAnalysisSection.classList.remove('hidden');
-      simpleAnalysisButtons.classList.remove('hidden');
-      rankingAnalysisSection.classList.add('hidden');
+  // --- GERENCIAMENTO DE VISIBILIDADE ---
+  function updateView() {
+    const selected = document.querySelector('input[name="contexto"]:checked').value;
     
-    } else if (selectedContext === 'recrutamento') {
-      // MODO: AVALIAR CANDIDATO
-      rankingToggleField.classList.remove('hidden');
-      
-      if (isRankingActive) {
-        // MODO: AVALIAR (RANKING)
-        simpleAnalysisSection.classList.add('hidden');
-        simpleAnalysisButtons.classList.add('hidden');
-        rankingAnalysisSection.classList.remove('hidden');
-      } else {
-        // MODO: AVALIAR (SIMPLES)
-        simpleAnalysisSection.classList.remove('hidden');
-        simpleAnalysisButtons.classList.remove('hidden');
-        rankingAnalysisSection.classList.add('hidden');
-      }
+    // Reset inicial
+    resultadoDiv.classList.remove("ativo");
+    errorMessage.classList.add("hidden");
+    analysisArea.classList.add("hidden");
+    advancedFiltersArea.classList.add("hidden");
+    rankingToggleWrapper.classList.add("hidden");
+
+    if (selected === "recrutamento") {
+      analysisArea.classList.remove("hidden");
+      rankingToggleWrapper.classList.remove("hidden");
+      updateRecruiterMode();
+      githubUsername.placeholder = "Cole o link do GitHub ou digite o usuário do candidato...";
+    } 
+    else if (selected === "autoanalise") {
+      analysisArea.classList.remove("hidden");
+      simpleFormContainer.classList.remove("hidden");
+      rankingFormContainer.classList.add("hidden");
+      githubUsername.placeholder = "Digite seu nome de usuário do GitHub...";
+      toggleRanking.checked = false;
+    } 
+    else if (selected === "filtros") {
+      advancedFiltersArea.classList.remove("hidden");
     }
-    // Limpar resultados e erros ao trocar de modo
-    mostrarAnalise(""); // ESCONDER a caixa de insights
   }
 
-  contextRadios.forEach(radio => radio.addEventListener('change', updateFormVisibility));
-  toggleRankingCheckbox.addEventListener('change', updateFormVisibility);
-  
+  function updateRecruiterMode() {
+    if (toggleRanking.checked) {
+      simpleFormContainer.classList.add("hidden");
+      rankingFormContainer.classList.remove("hidden");
+    } else {
+      simpleFormContainer.classList.remove("hidden");
+      rankingFormContainer.classList.add("hidden");
+    }
+  }
+
+  contextRadios.forEach(r => r.addEventListener("change", updateView));
+  if (toggleRanking) toggleRanking.addEventListener("change", updateRecruiterMode);
+
   if (cancelRankingBtn) {
     cancelRankingBtn.addEventListener("click", () => {
       toggleRankingCheckbox.checked = false;
-      updateFormVisibility();
+      updateRecruiterMode();
     });
   }
-  
-  updateFormVisibility(); // Estado inicial
 
-  // ===============================
-  // LÓGICA DO FORMULÁRIO DE RANKING
-  // ===============================
+  // Inicialização
+  updateView();
+
+
+  // --- LÓGICA DE RANKING (Lista de Candidatos) ---
   const addCandidateBtn = document.getElementById("addCandidateBtn");
   const newCandidateInput = document.getElementById("newCandidateUrl");
   const candidateListDiv = document.getElementById("candidateList");
@@ -157,243 +102,110 @@ document.addEventListener("DOMContentLoaded", () => {
   if (addCandidateBtn) {
     addCandidateBtn.addEventListener("click", () => {
       const url = newCandidateInput.value.trim();
-      if (url) {
-        if (candidateURLs.includes(url)) {
-            mostrarErro("❗ Candidato já adicionado.");
-            return;
-        }
-        candidateURLs.push(url);
-        
-        const item = document.createElement("div");
-        item.className = "candidate-item";
-        item.innerHTML = `<span>${url}</span><button type="button" data-url="${url}">&times;</button>`;
-        candidateListDiv.appendChild(item);
-        
-        newCandidateInput.value = "";
-        mostrarAnalise(""); // Limpa qualquer erro
+      if (!url) return;
+      
+      if (candidateURLs.includes(url)) {
+        showError("Candidato já adicionado.");
+        return;
       }
-    });
+      // --- MÁXIMO 3 ---
+      if (candidateURLs.length >= 3) {
+        showError("Máximo de 3 candidatos permitidos.");
+        return;
+      }
 
-    candidateListDiv.addEventListener("click", (e) => {
-      if (e.target.tagName === "BUTTON") {
-        const urlToRemove = e.target.getAttribute("data-url");
-        candidateURLs = candidateURLs.filter(url => url !== urlToRemove);
-        e.target.parentElement.remove();
-      }
+      candidateURLs.push(url);
+      renderCandidates();
+      newCandidateInput.value = "";
+      errorMessage.classList.add("hidden");
     });
   }
 
-  if (formRanking) {
-    const submitButton = formRanking.querySelector("button[type='submit']");
-
-    formRanking.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const jobDescription = document.getElementById("jobDescription").value.trim();
-
-      if (!jobDescription) {
-        mostrarErro("❗ Por favor, preencha a Descrição da Vaga.");
-        return;
-      }
-      if (candidateURLs.length === 0) {
-        mostrarErro("❗ Adicione pelo menos um candidato para análise.");
-        return;
-      }
-      
-      if (submitButton) submitButton.disabled = true;
-      
-      mostrarLoading("🔍 Analisando e rankeando candidatos..."); 
-      
-      try {
-        const resposta = await fetch("/ranking-vaga", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jobDescription: jobDescription, candidateUrls: candidateURLs }),
-        });
-
-        if (!resposta.ok) {
-          const dadosErro = await resposta.json().catch(() => ({}));
-          const detalheErro = dadosErro.detail || dadosErro.erro || resposta.statusText;
-          mostrarErro(`❌ Erro ${resposta.status}: ${detalheErro}`);
-          return;
-        }
-
-        const dados = await resposta.json();
-        const conteudo = dados.analise || dados.resposta;
-        if (conteudo) {
-          mostrarAnalise(conteudo);
-        } else {
-          mostrarErro("⚠️ Erro: resposta inesperada do servidor para o ranking.");
-        }
-      } catch (error) {
-        console.error("Erro na requisição de ranking:", error);
-        mostrarErro(`❌ Erro ao conectar ao servidor para ranking: ${error.message}`);
-      } finally {
-        if (submitButton) submitButton.disabled = false;
-      }
+  function renderCandidates() {
+    candidateListDiv.innerHTML = "";
+    candidateURLs.forEach(url => {
+      const div = document.createElement("div");
+      div.className = "candidate-item";
+      div.innerHTML = `<span>${url}</span> <button type="button" onclick="removeCandidate('${url}')"><i class="fas fa-times"></i></button>`;
+      candidateListDiv.appendChild(div);
     });
   }
 
-  // ===============================
-  // LÓGICA DO FORMULÁRIO DE ANÁLISE SIMPLES
-  // ===============================
-  if (formulario && resultadoDiv && githubUsernameInput) {
-    const botao = formulario.querySelector('button[type=submit]');
+  window.removeCandidate = (url) => {
+    candidateURLs = candidateURLs.filter(c => c !== url);
+    renderCandidates();
+  };
 
-    formulario.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = githubUsernameInput.value.trim();
 
-      if (!username) {
-        githubUsernameInput.classList.add("input-erro");
-        mostrarErro("❗ Por favor, insira o nome de usuário ou URL do GitHub.");
-        return;
-      } else {
-        githubUsernameInput.classList.remove("input-erro");
-      }
-      
-      const contextoSelecionado = document.querySelector('input[name="contexto"]:checked');
-      const contexto = contextoSelecionado ? contextoSelecionado.value : "recrutamento";
-
-      if (botao) botao.disabled = true;
-      mostrarLoading("🔍 Carregando análise");
-
-      try {
-        const resposta = await fetch("/analisar-perfil", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ usernameOrUrl: username, contexto: contexto }),
-        });
-
-        if (!resposta.ok) {
-          const dadosErro = await resposta.json().catch(() => ({}));
-          const detalheErro = dadosErro.detail || dadosErro.erro || resposta.statusText;
-          mostrarErro(`❌ Erro ${resposta.status}: ${detalheErro}`);
-          return;
-        }
-
-        const dados = await resposta.json();
-        const conteudo = dados.analise || dados.resposta;
-
-        if (conteudo) {
-          mostrarAnalise(conteudo);
-        } else {
-          mostrarErro("⚠️ Erro: resposta inesperada do servidor.");
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        mostrarErro(`❌ Erro ao conectar: ${error.message}`);
-      } finally {
-        if (botao) botao.disabled = false;
-      }
-    });
-  }
-
-  // ===============================
-  // FILTROS AVANÇADOS
-  // ===============================
-  const toggleFiltersBtn = document.getElementById("toggleFilters");
-  const filtrosSection = document.getElementById("filtrosAvancados");
+  // --- ENVIOS (SUBMITS) ---
   
-  if (toggleFiltersBtn && filtrosSection) {
-    toggleFiltersBtn.addEventListener("click", () => {
-      filtrosSection.classList.toggle("ativo");
-      toggleFiltersBtn.textContent = filtrosSection.classList.contains("ativo")
-        ? "Esconder Filtros ❌"
-        : "Filtros Avançados 🔍";
+  // 1. Form Simples
+  formSimple.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const user = githubUsername.value.trim();
+    const context = document.querySelector('input[name="contexto"]:checked').value;
+    if (!user) return showError("Digite um usuário.");
+    
+    await processRequest("/analisar-perfil", { usernameOrUrl: user, contexto: context });
+  });
+
+  // 2. Form Ranking
+  formRanking.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const jd = document.getElementById("jobDescription").value.trim();
+    if (!jd) return showError("Preencha a descrição da vaga.");
+    if (candidateURLs.length < 1) return showError("Adicione candidatos.");
+    
+    await processRequest("/ranking-vaga", { jobDescription: jd, candidateUrls: candidateURLs });
+  });
+
+  // 3. Filtros
+  formFiltros.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const getChecked = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+    const linguagens = getChecked("linguagens");
+    const habilidades = getChecked("habilidades");
+    const metodologias = getChecked("metodologias");
+    
+    if (linguagens.length === 0 && habilidades.length === 0 && metodologias.length === 0) return showError("Selecione filtros.");
+
+    await processRequest("/analisar-com-filtros", {
+      linguagens, habilidades, metodologias, minRepos: 5, atividadeRecente: true
     });
-  }
+  });
 
-  if (formFiltros) {
-    const botaoFiltros = formFiltros.querySelector("button[type=submit]");
 
-    formFiltros.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  // --- HELPERS ---
+  async function processRequest(endpoint, data) {
+    loader.classList.remove("hidden");
+    resultadoDiv.classList.remove("ativo");
+    errorMessage.classList.add("hidden");
 
-      function coletarCheckboxes(nome) {
-        return Array.from(formFiltros.querySelectorAll(`input[name='${nome}']:checked`)).map(cb => cb.value);
-      }
-
-      const linguagensSelecionadas = coletarCheckboxes("linguagens");
-      const habilidadesSelecionadas = coletarCheckboxes("habilidades");
-      const metodologiasSelecionadas = coletarCheckboxes("metodologias");
-
-      if (!linguagensSelecionadas.length && !habilidadesSelecionadas.length && !metodologiasSelecionadas.length) {
-        mostrarErro("❗ Selecione pelo menos uma opção em algum filtro.");
-        if (botaoFiltros) botaoFiltros.disabled = false;
-        return;
-      }
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await response.json();
       
-      const minRepos = formFiltros.querySelector("#minRepos") ? parseInt(formFiltros.querySelector("#minRepos").value) || 0 : 0;
-      const minStars = formFiltros.querySelector("#minStars") ? parseInt(formFiltros.querySelector("#minStars").value) || 0 : 0;
-      const minFollowers = formFiltros.querySelector("#minFollowers") ? parseInt(formFiltros.querySelector("#minFollowers").value) || 0 : 0;
-      const atividadeRecente = formFiltros.querySelector("#atividadeRecente") ? formFiltros.querySelector("#atividadeRecente").checked : false;
-      const localizacao = formFiltros.querySelector("#localizacao") ? formFiltros.querySelector("#localizacao").value.trim() : null;
+      if (!response.ok) throw new Error(result.detail || "Erro na requisição.");
 
+      resultadoDiv.innerHTML = result.analise || result.resposta;
+      resultadoDiv.classList.add("ativo");
+      
+      setTimeout(() => resultadoDiv.scrollIntoView({ behavior: "smooth" }), 100);
 
-      if (botaoFiltros) botaoFiltros.disabled = true;
-      mostrarLoading("🔍 Buscando com filtros...");
-
-      const dadosFiltros = {
-        linguagens: linguagensSelecionadas,
-        habilidades: habilidadesSelecionadas,
-        metodologias: metodologiasSelecionadas,
-        minRepos,
-        minStars,
-        minFollowers,
-        atividadeRecente,
-        localizacao
-      };
-
-      try {
-        const resposta = await fetch("/analisar-com-filtros", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dadosFiltros),
-        });
-
-        if (!resposta.ok) {
-          const dadosErro = await resposta.json().catch(() => ({}));
-          const detalheErro = dadosErro.detail || dadosErro.erro || resposta.statusText;
-          mostrarErro(`❌ Erro ${resposta.status}: ${detalheErro}`);
-          return;
-        }
-
-        const dados = await resposta.json();
-        const conteudo = dados.analise || dados.resposta;
-
-        if (conteudo) {
-          mostrarAnalise(conteudo);
-        } else {
-          mostrarErro("⚠️ Erro: resposta inesperada do servidor.");
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        mostrarErro(`❌ Erro ao conectar: ${error.message}`);
-      } finally {
-        if (botaoFiltros) botaoFiltros.disabled = false;
-      }
-    });
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      loader.classList.add("hidden");
+    }
   }
 
-  // ===============================
-  // BOTÃO DE CONTATO
-  // ===============================
-  const contatoBtn = document.getElementById("contatoBtn");
-  const emailContato = document.getElementById("emailContato");
-
-  if (contatoBtn && emailContato) {
-    contatoBtn.addEventListener("click", async (event) => {
-      event.preventDefault();
-      const email = emailContato.textContent.trim();
-      try {
-        await navigator.clipboard.writeText(email);
-        contatoBtn.textContent = "📋 E-mail copiado!";
-        setTimeout(() => { contatoBtn.textContent = "Contato"; }, 2000);
-      } catch (err) {
-        console.error("Erro ao copiar e-mail:", err);
-        contatoBtn.textContent = "❌ Erro ao copiar";
-        setTimeout(() => { contatoBtn.textContent = "Contato"; }, 2000);
-      }
-    });
+  function showError(msg) {
+    errorMessage.textContent = msg;
+    errorMessage.classList.remove("hidden");
+    loader.classList.add("hidden");
   }
 });
