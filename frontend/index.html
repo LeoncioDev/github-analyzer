@@ -5,148 +5,167 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Git Insights</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 
 <body>
   <nav class="navbar">
-    <div class="logo">💎 <span>Git Insights</span></div>
+    <div class="logo">
+      <img src="/static/logo.png" alt="Logo" onerror="this.style.display='none'">
+      <span>Git Insights</span>
+    </div>
     <div class="nav-links">
       <a href="/" class="nav-link">Home</a>
       <a href="/sobre" class="nav-link">Sobre</a>
       <a href="#" id="contatoBtn" class="nav-link" title="Clique para copiar o e-mail">Contato</a>
       <span id="emailContato" style="display:none;">leonciodev.contact@gmail.com</span>
     </div>
-    <button id="themeToggle" class="secondary-btn">🌙</button>
+    <div class="navbar-actions">
+      <button id="themeToggle" class="action-btn" title="Alternar Tema">🌙</button>
+    </div>
   </nav>
 
-<main>
-  <h1>Analisador de Perfil GitHub com IA</h1>
+  <main>
+    <h1>Analisador de Perfil GitHub com IA</h1>
+    <p class="subtitle">Selecione uma ferramenta para começar.</p>
 
-  <fieldset class="context-selector">
-    <legend>Qual é o seu objetivo?</legend>
-    <div class="context-options">
-      <label>
-        <input type="radio" name="contexto" value="recrutamento" checked />
-        Avaliar um Candidato
-      </label>
-      <label>
-        <input type="radio" name="contexto" value="autoanalise" />
-        Analisar meu Perfil
-      </label>
-    </div>
-  </fieldset>
-
-  <div id="simpleAnalysisSection">
-
-    <fieldset id="rankingToggleField" class="filter-switch-field">
-      <label for="toggleRanking" class="filter-switch-label">
-        <span>Comparar múltiplos candidatos com uma vaga?</span>
-        <div class="toggle-switch">
-          <input type="checkbox" id="toggleRanking" name="toggleRanking" />
-          <span class="slider"></span>
-        </div>
-      </label>
-    </fieldset>
-    <form id="formulario" class="search-box">
-      <input type="text" id="githubUsername" placeholder="Digite o nome de usuário ou cole a URL" autocomplete="off" />
-    </form>
-  </div>
-
-  <div id="rankingAnalysisSection" class="hidden">
-    <form id="formRanking" class="ranking-form">
-      <fieldset>
-        <legend>1. Descrição da Vaga</legend>
-        <textarea id="jobDescription" rows="8"
-          placeholder="Cole a descrição da vaga (requisitos, tecnologias, etc.) aqui..."></textarea>
-      </fieldset>
-
-      <fieldset>
-        <legend>2. Adicione os Candidatos</legend>
-        <div class="candidate-input-group">
-          <input type="text" id="newCandidateUrl" placeholder="Cole a URL ou nome de usuário do GitHub" />
-          <button type="button" id="addCandidateBtn" class="secondary-btn">Adicionar</button>
-        </div>
-        <div id="candidateList" class="candidate-list">
-        </div>
-      </fieldset>
-
-      <div class="button-group">
-        <button type="submit" class="primary-btn">Analisar e Rankear Candidatos</button>
-        <button type="button" id="cancelRankingBtn" class="secondary-btn">Voltar</button>
+    <fieldset class="context-selector">
+      <legend>Qual é o seu objetivo?</legend>
+      <div class="context-options">
+        <label class="radio-option">
+          <input type="radio" name="contexto" value="recrutamento" checked />
+          <span><i class="fas fa-briefcase"></i> Recrutador</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="contexto" value="autoanalise" />
+          <span><i class="fas fa-user"></i> Autoanálise</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="contexto" value="filtros" />
+          <span><i class="fas fa-filter"></i> Filtros Avançados</span>
+        </label>
       </div>
-    </form>
-  </div>
-  <div id="simpleAnalysisButtons" class="button-group">
-    <button type="submit" form="formulario" class="primary-btn">Analisar</button>
-    <button id="toggleFilters" type="button" class="secondary-btn">Filtros Avançados 🔍</button>
-  </div>
+    </fieldset>
 
-  <section id="filtrosAvancados">
-    <form id="formFiltros" class="filters-form">
-      <fieldset>
-        <legend>Linguagens de Programação</legend>
-        <div class="filter-options">
-          <label><input type="checkbox" name="linguagens" value="JavaScript" /> JavaScript</label>
-          <label><input type="checkbox" name="linguagens" value="Python" /> Python</label>
-          <label><input type="checkbox" name="linguagens" value="Java" /> Java</label>
-          <label><input type="checkbox" name="linguagens" value="C++" /> C++</label>
-          <label><input type="checkbox" name="linguagens" value="Ruby" /> Ruby</label>
-          <label><input type="checkbox" name="linguagens" value="TypeScript" /> TypeScript</label>
-          <label><input type="checkbox" name="linguagens" value="Go" /> Go</label>
-          <label><input type="checkbox" name="linguagens" value="PHP" /> PHP</label>
-          <label><input type="checkbox" name="linguagens" value="C#" /> C#</label>
-          <label><input type="checkbox" name="linguagens" value="Swift" /> Swift</label>
+    <div id="analysisArea">
+
+      <div id="rankingToggleWrapper" class="toggle-wrapper">
+        <label class="toggle-switch-label">
+          <span>Comparar múltiplos candidatos com uma vaga?</span>
+          <div class="toggle-switch">
+            <input type="checkbox" id="toggleRanking" name="toggleRanking" />
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div id="simpleFormContainer" class="fade-in">
+        <form id="formulario" class="search-box">
+          <div class="input-group-icon">
+            <i class="fab fa-github input-icon"></i>
+            <input type="text" id="githubUsername" placeholder="Digite o nome de usuário ou cole a URL..."
+              autocomplete="off" />
+          </div>
+          <div class="button-row">
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-search"></i> Analisar Perfil
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="rankingFormContainer" class="hidden fade-in">
+        <form id="formRanking" class="ranking-form">
+          <fieldset>
+            <legend><i class="fas fa-file-alt"></i> Descrição da Vaga</legend>
+            <textarea id="jobDescription" rows="6"
+              placeholder="Cole aqui a descrição da vaga (requisitos, diferenciais)..."></textarea>
+          </fieldset>
+
+          <fieldset>
+            <legend><i class="fas fa-users"></i> Candidatos (Max 3)</legend>
+            <div class="candidate-input-row">
+              <input type="text" id="newCandidateUrl" placeholder="Usuário ou URL do GitHub" />
+              <button type="button" id="addCandidateBtn" class="secondary-btn icon-only"><i
+                  class="fas fa-plus"></i></button>
+            </div>
+            <div id="candidateList" class="candidate-list"></div>
+          </fieldset>
+
+          <div class="button-row">
+            <button type="submit" class="primary-btn">
+              <i class="fas fa-list-ol"></i> Analisar e Rankear
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div id="advancedFiltersArea" class="hidden fade-in">
+      <form id="formFiltros" class="filters-form search-box">
+        <div class="filters-header" style="text-align:center; margin-bottom:1.5rem;">
+          <h3 style="color:#58a6ff;"><i class="fas fa-sliders-h"></i> Buscar Desenvolvedor Aleatório</h3>
+          <p>Selecione as tecnologias desejadas:</p>
         </div>
-      </fieldset>
 
-      <fieldset>
-        <legend>Habilidades Técnicas</legend>
-        <div class="filter-options">
-          <label><input type="checkbox" name="habilidades" value="Git" /> Git</label>
-          <label><input type="checkbox" name="habilidades" value="Docker" /> Docker</label>
-          <label><input type="checkbox" name="habilidades" value="Kubernetes" /> Kubernetes</label>
-          <label><input type="checkbox" name="habilidades" value="CI/CD" /> CI/CD</label>
-          <label><input type="checkbox" name="habilidades" value="AWS" /> AWS</label>
-          <label><input type="checkbox" name="habilidades" value="Azure" /> Azure</label>
-          <label><input type="checkbox" name="habilidades" value="Linux" /> Linux</label>
+        <div class="filter-group">
+          <h4>Linguagens</h4>
+          <div class="filter-options">
+            <label><input type="checkbox" name="linguagens" value="JavaScript"> JavaScript</label>
+            <label><input type="checkbox" name="linguagens" value="Python"> Python</label>
+            <label><input type="checkbox" name="linguagens" value="Java"> Java</label>
+            <label><input type="checkbox" name="linguagens" value="TypeScript"> TypeScript</label>
+            <label><input type="checkbox" name="linguagens" value="Go"> Go</label>
+            <label><input type="checkbox" name="linguagens" value="PHP"> PHP</label>
+            <label><input type="checkbox" name="linguagens" value="C#"> C#</label>
+          </div>
         </div>
-      </fieldset>
 
-      <fieldset>
-        <legend>Metodologias</legend>
-        <div class="filter-options">
-          <label><input type="checkbox" name="metodologias" value="Agile" /> Agile</label>
-          <label><input type="checkbox" name="metodologias" value="Scrum" /> Scrum</label>
-          <label><input type="checkbox" name="metodologias" value="Kanban" /> Kanban</label>
-          <label><input type="checkbox" name="metodologias" value="Lean" /> Lean</label>
-          <label><input type="checkbox" name="metodologias" value="XP" /> XP</label>
+        <div class="filter-group">
+          <h4>Habilidades</h4>
+          <div class="filter-options">
+            <label><input type="checkbox" name="habilidades" value="Docker"> Docker</label>
+            <label><input type="checkbox" name="habilidades" value="AWS"> AWS</label>
+            <label><input type="checkbox" name="habilidades" value="Kubernetes"> Kubernetes</label>
+            <label><input type="checkbox" name="habilidades" value="Azure"> Azure</label>
+            <label><input type="checkbox" name="habilidades" value="CI/CD"> CI/CD</label>
+            <label><input type="checkbox" name="habilidades" value="Linux"> Linux</label>
+          </div>
         </div>
-      </fieldset>
 
-      <button type="submit" class="primary-btn">Buscar Desenvolvedores</button>
-    </form>
-  </section>
+        <div class="filter-group">
+          <h4>Metodologias</h4>
+          <div class="filter-options">
+            <label><input type="checkbox" name="metodologias" value="Agile"> Agile</label>
+            <label><input type="checkbox" name="metodologias" value="Scrum"> Scrum</label>
+            <label><input type="checkbox" name="metodologias" value="Kanban"> Kanban</label>
+          </div>
+        </div>
 
-  <section id="resultado" class="insights" tabindex="-1">
-    <h2>Insights</h2>
-    <p>
-      Aqui serão exibidas as análises e métricas geradas pela IA após analisar um perfil GitHub,
-      incluindo linguagens mais usadas, contribuições e possíveis áreas de especialização.
-    </p>
-    <p>
-      <strong>Análise Detalhada:</strong> O texto gerado exibirá padrões de codificação, principais repositórios e
-      outras informações úteis, mantendo uma leitura clara e moderna.
-    </p>
-  </section>
-</main>
+        <div class="button-row">
+          <button type="submit" class="primary-btn">
+            <i class="fas fa-filter"></i> Buscar com Filtros
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <section id="resultado" class="insights" tabindex="-1"></section>
+
+    <div id="loader" class="hidden">
+      <div class="loader-content">
+        <div class="spinner-ring"></div>
+        <span class="loading-text">Processando inteligência...</span>
+      </div>
+    </div>
+
+    <div id="errorMessage" class="error-banner hidden"></div>
+  </main>
 
   <footer>
-    <div class="footer-links">
-      <a href="#">Termos de Serviço</a> |
-      <a href="#">Política de Privacidade</a>
-    </div>
-    <p>©2025 Git Insights. Todos os direitos reservados.</p>
+    <p>&copy; 2025 Git Insights.</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
