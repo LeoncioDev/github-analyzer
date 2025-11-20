@@ -107,6 +107,7 @@ REGRAS DE GERAÇÃO:
 5.  **ESTRUTURA VISUAL:** Envolva CADA seção principal em um `<div>` com este estilo inline exato:
     `<div style="{card_style}">...</div>`
 6.  Coloque o título da seção (ex: `<h2>...</h2>`) DENTRO de cada `<div>`.
+7.  **IDENTIFICAÇÃO:** Refira-se ao candidato APENAS pelo Nome e (@username). NUNCA use o nome de um repositório como se fosse o apelido ou "conhecido como" do candidato. Repositórios são projetos.
 """
 
         if contexto == "autoanalise":
@@ -173,6 +174,8 @@ DADOS DO PERFIL:
 
 TAREFA: Gere o relatório HTML.
 1.  Primeiro, crie um card de "Resumo do Perfil e Veredito".
+    - Comece com um parágrafo resumindo o perfil: "João Paulo (@leonciodev) é um desenvolvedor com foco em...".
+    - JAMAIS confunda o nome de um repositório com o nome do candidato.
 2.  Segundo, crie um card de "Análise Técnica Detalhada".
 3.  **Dentro desse segundo card:** Para CADA repositório da lista, você DEVE envolvê-lo em um `<div>` com o estilo: `<div style="{repo_card_style}">` (comece o primeiro *sem* esse div).
 4.  **Dentro de cada `div` de projeto:** Gere um `<h3>` com o nome do projeto.
@@ -204,7 +207,7 @@ ESTRUTURA HTML DE SAÍDA (use-a como guia):
 """
         
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=2000, 
             temperature=0.4,
@@ -253,6 +256,10 @@ REGRAS DE GERAÇÃO:
     `<div style="{card_style}">...</div>`
 6.  Coloque o título da seção (ex: `<h2>...</h2>`) DENTRO de cada `<div>`.
 7.  Use divs para separar a análise de cada candidato dentro da seção.
+8. Seja objetivo e direto em suas análises e justificativas.
+9. Considere a descrição da vaga cuidadosamente ao ranquear os candidatos.
+10. Comece mencionando o nome completo do desenvolvedor, seguido pelo seu username entre parênteses (ex: João (@joao)).
+11. **IMPORTANTE:** NUNCA use o nome de um repositório como se fosse o apelido do desenvolvedor (ex: não diga "conhecido como ProjectX").
 
 DESCRIÇÃO DA VAGA:
 ---
